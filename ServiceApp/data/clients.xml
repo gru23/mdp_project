@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="21.0.9" class="java.beans.XMLDecoder">
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="client.ClientEntity">
+    <void property="address">
+     <string>Banja Luka, Brace Potkonjaka 117</string>
+    </void>
+    <void property="email">
+     <string>gru@mail.com</string>
+    </void>
+    <void property="firstName">
+     <string>Grujica</string>
+    </void>
+    <void property="isApproved">
+     <boolean>true</boolean>
+    </void>
+    <void property="isBlocked">
+     <boolean>false</boolean>
+    </void>
+    <void property="lastName">
+     <string>Vasić</string>
+    </void>
+    <void property="password">
+     <string>gru123</string>
+    </void>
+    <void property="phoneNumber">
+     <string>065/111-932</string>
+    </void>
+    <void property="username">
+     <string>gru</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="client.ClientEntity">
+    <void property="address">
+     <string>Banja Luka, Kocicev vijenac</string>
+    </void>
+    <void property="email">
+     <string>milan@mail.com</string>
+    </void>
+    <void property="firstName">
+     <string>Milan</string>
+    </void>
+    <void property="isApproved">
+     <boolean>false</boolean>
+    </void>
+    <void property="isBlocked">
+     <boolean>true</boolean>
+    </void>
+    <void property="lastName">
+     <string>Tadić</string>
+    </void>
+    <void property="password">
+     <string>milan123</string>
+    </void>
+    <void property="phoneNumber">
+     <string>065/112-132</string>
+    </void>
+    <void property="username">
+     <string>milan</string>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>
