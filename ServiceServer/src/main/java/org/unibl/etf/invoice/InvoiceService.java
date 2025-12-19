@@ -7,16 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.unibl.etf.appointment.enums.AppointmentType;
-import org.unibl.etf.client.AccountStatus;
-import org.unibl.etf.client.Client;
-import org.unibl.etf.parts.PartEntity;
 import org.unibl.etf.util.EmailSender;
-import org.unibl.etf.vehicle.VehicleEntity;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,59 +20,6 @@ public class InvoiceService {
 	
 	public InvoiceService() {
 		super();
-	}
-
-	public static void main(String[] args) {
-		PartEntity p1 = new PartEntity();
-		p1.setCode("BRK-001");
-		p1.setName("Brake pads");
-		p1.setManufacturer("Bosch");
-		p1.setPrice(49.99);
-		p1.setQuantity(1);
-		p1.setDescription("Front brake pads set");
-
-		PartEntity p2 = new PartEntity();
-		p2.setCode("OIL-023");
-		p2.setName("Engine oil 5W-30");
-		p2.setManufacturer("Castrol");
-		p2.setPrice(12.50);
-		p2.setQuantity(5);
-		p2.setDescription("Premium long-life engine oil");
-
-		Client client = new Client();
-		client.setId("CL-1001");
-		client.setFirstName("Marko");
-		client.setLastName("Marković");
-		client.setUsername("marko123");
-		client.setAddress("Bulevar Cara Dušana 12, Banja Luka");
-		client.setPhoneNumber("+38765123456");
-		client.setEmail("grujo23@gmail.com");
-		client.setStatus(AccountStatus.APPROVED);
-
-		VehicleEntity vehicle = new VehicleEntity();
-		vehicle.setId("VH-2001");
-		vehicle.setManufacturer("BMW");
-		vehicle.setModel("320d");
-		vehicle.setYear(2010);
-		vehicle.setRegistrationPlate("BL-123-AB");
-		vehicle.setClientId(client.getId());
-
-		ArrayList<PartEntity> parts = new ArrayList<>();
-		parts.add(p1);
-		parts.add(p2);
-
-		Invoice invoice = new Invoice(
-		        parts,
-		        AppointmentType.REGULAR_SERVICE,
-		        client,
-		        vehicle
-		);
-
-//		InvoicePDFGenerator generator = new InvoicePDFGenerator(invoice);
-//		generator.generateInvoice("C:\\Users\\Administrator\\Desktop\\invoice_test.pdf");
-	
-
-		new InvoiceService().writeAndEmailInvoice(invoice);
 	}
 	
 	public void writeAndEmailInvoice(Invoice invoice) {
@@ -145,8 +86,6 @@ public class InvoiceService {
                 + File.separator + "ServiceServer"
                 + File.separator + "WEB-INF"
                 + File.separator + "invoice";
-        
-//        String dir = "C:\\Users\\Administrator\\Desktop\\invoice";
 
         File f = new File(dir);
         if (!f.exists()) {

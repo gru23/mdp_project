@@ -87,6 +87,8 @@ public class AppSession {
     }
     
     public void logout() {
+    	//tu implementirati da se prilikom odjave posalje mnulticast svima kako bi oni uklonili korisnika iz chat-a
+//    	groupChatSender.send(null);
         currentClient = null;
         onlineClients = null;
     }

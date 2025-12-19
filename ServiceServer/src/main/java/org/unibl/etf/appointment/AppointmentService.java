@@ -6,19 +6,36 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.unibl.etf.appointment.enums.AppointmentStatus;
+import org.unibl.etf.client.Client;
+import org.unibl.etf.client.ClientDAO;
 import org.unibl.etf.exceptions.AppointmentConflictException;
 import org.unibl.etf.exceptions.InternalServerError;
 import org.unibl.etf.exceptions.NotFoundException;
+import org.unibl.etf.invoice.Invoice;
+import org.unibl.etf.invoice.InvoiceService;
+import org.unibl.etf.parts.PartEntity;
+import org.unibl.etf.parts.PartService;
+import org.unibl.etf.vehicle.VehicleDAO;
+import org.unibl.etf.vehicle.VehicleEntity;
 
 
 public class AppointmentService {
 	private final AppointmentDAO appointmentDAO;
+	private final ClientDAO clientDAO;
+	private final VehicleDAO vehicleDAO;
+	private final PartService partService;
+	private final InvoiceService invoiceService;
 	
 	public AppointmentService() {
-		this.appointmentDAO = new AppointmentDAO();	
+		this.appointmentDAO = new AppointmentDAO();
+		this.clientDAO = new ClientDAO();
+		this.vehicleDAO = new VehicleDAO();
+		this.partService = new PartService();
+		this.invoiceService = new InvoiceService();	
 	}
 	
 	public ArrayList<AppointmentEntity> getAll() throws InternalServerError {
@@ -103,6 +120,8 @@ public class AppointmentService {
 			Optional<AppointmentEntity> entity = appointmentDAO.findById(id);
 			if(entity.isEmpty())
 				throw new NotFoundException("NOT FOUND - Appointment with id " + id + " not found!");
+			if(AppointmentStatus.REPAIRED == updatedAppointment.getStatus())
+				emailInvoice(updatedAppointment);
 			return appointmentDAO.update(id, updatedAppointment);
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
@@ -124,6 +143,20 @@ public class AppointmentService {
 		ArrayList<AppointmentEntity> appointments = getAllByClientId(clientId);
 		for(AppointmentEntity a : appointments)
 			delete(a.getId());
+	}
+	
+	private void emailInvoice(AppointmentEntity updatedAppointment) {
+		try {
+			Client client = new Client(clientDAO.findById(updatedAppointment.getClientId()).get());
+			VehicleEntity vehicle = vehicleDAO.findByClientId(client.getId()).get();
+			ArrayList<PartEntity> parts = new ArrayList<>();
+			for(int i = 0; i <= new Random().nextInt(2); i++) 
+				parts.add(partService.sellRandomPart());
+			Invoice invoice = new Invoice(parts,  updatedAppointment.getType(), client, vehicle);
+			invoiceService.writeAndEmailInvoice(invoice);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

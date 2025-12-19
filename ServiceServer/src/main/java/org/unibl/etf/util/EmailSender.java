@@ -78,6 +78,7 @@ public class EmailSender {
             System.out.println("Email sent!");
 
         } catch (MessagingException e) {
+        	System.err.println("SMTP probably is not allowed on your network.");
             e.printStackTrace();
         }
     }

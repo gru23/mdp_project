@@ -61,6 +61,7 @@ public class RestClient {
 	            }
 	            if (responseCode >= 300) {
 	                String serverMessage = response.toString();
+	                System.out.println(serverMessage);
 	                ServerErrorMessage error = gson.fromJson(serverMessage, ServerErrorMessage.class);
 	                throw new ServerError("Server returned error: " + error.getContent());
 	            }

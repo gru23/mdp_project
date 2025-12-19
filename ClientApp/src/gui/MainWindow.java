@@ -88,6 +88,7 @@ public class MainWindow extends JFrame {
 		appointmentsLink.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+            	appointmentsPanel.refreshTable();
             	underlineSelecteLink(Screen.APPOINTMENTS);
                 changeCurrentScreen(Screen.APPOINTMENTS);
             }

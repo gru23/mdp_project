@@ -22,6 +22,8 @@ public class UnicastChatReceiver extends Thread {
             while ((line = in.readLine()) != null) {
             	String[] split = line.split("#");
             	String username = split[0];
+            	System.out.println(username);
+            	System.out.println(line);
             	AppSession.getInstance()
             	.getChatPanel()
             	.receiveNewMessage(username, formattedMessage(new ClientMessage(username, split[2])), false);

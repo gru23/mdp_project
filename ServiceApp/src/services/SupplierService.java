@@ -22,6 +22,17 @@ public class SupplierService {
 		}
 	}
 	
+	public ArrayList<Order> getAllOrders() throws ServerError {
+		HttpURLConnection conn = null;
+		try {
+			conn = RestClient.openConnection("suppliers/orders", false, "GET");
+			String jsonResponse = RestClient.readResponse(conn);
+			return JSONConversion.convertArrayList(jsonResponse, Order.class);
+		} finally {
+			if(conn != null) conn.disconnect();
+		}
+	}
+	
 	public Order order(Order request) throws ServerError {
 		HttpURLConnection conn = null;
 		Order order = null;

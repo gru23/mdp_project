@@ -80,6 +80,12 @@ public class AppointmentsPanel extends JPanel {
         add(splitPane, BorderLayout.CENTER);
 	}
 	
+	public void refreshTable() {
+	    DefaultTableModel newModel = getTable();
+	    appointmentTable.setModel(newModel);
+	    formatTable(appointmentTable);
+	}
+	
 	private JTextArea getAppointmentText() {
 		JTextArea appointmentText = new JTextArea("For making a new appointment, please choose date, time and "
 				+ "type of service, and then confirm appointment. Bottom table will show you status of appointment.");

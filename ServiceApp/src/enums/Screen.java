@@ -1,5 +1,5 @@
 package enums;
 
 public enum Screen {
-	CLIENTS, APPOINTMENTS, SPARE_PARTS
+	CLIENTS, CHAT, APPOINTMENTS, SPARE_PARTS, ORDERS
 }

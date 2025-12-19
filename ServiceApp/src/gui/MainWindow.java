@@ -7,6 +7,12 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -15,6 +21,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import chat.GroupChatReceiver;
+import chat.UnicastChatReceiver;
+import chat.UnicastChatSender;
 import enums.Screen;
 
 
@@ -24,27 +33,60 @@ public class MainWindow extends JFrame {
 	private JPanel currentPanel;
 
 	private JLabel clientsLink;
+	private JLabel chatLink;
 	private JLabel appointmentsLink;
 	private JLabel sparePartsLink;
+	private JLabel ordersLink;
 	private JLabel exitLink;
 	
 	private ClientsPanel clientsPanel;
+	private ChatPanel chatPanel;
 	private AppointmentsPanel appointmentsPanel;
 	private SparePartsPanel sparePartsPanel;
+	private OrdersPanel ordersPanel;
 	
 	private static final String clientsLinkName = "Clients";
+	private static final String chatLinkName = "Chat";
 	private static final String appointmentsLinkName = "Appointments ";
 	private static final String sparePartsLinkName = "Spare Parts ";
+	private static final String ordersLinkName = "Orders ";
 	
 	
 	public MainWindow() {
 		setLayout(new BorderLayout());
 		
-		clientsPanel = new ClientsPanel();
-		appointmentsPanel = new AppointmentsPanel();
-		sparePartsPanel = new SparePartsPanel();
+		try {
+			InetAddress addr = InetAddress.getByName("127.0.0.1");
+	        Socket sock = new Socket(addr, 15000);//new Socket(addr, TCP_PORT);
+	        
+
+			PrintWriter out = new PrintWriter(
+			    new BufferedWriter(
+			        new OutputStreamWriter(sock.getOutputStream())
+			    ), true
+			);
+			
+			// HANDSHAKE – SAMO JEDNOM
+			out.println("MDP Servicer");
+	        
+	        UnicastChatReceiver ucr = new UnicastChatReceiver(sock);
+			GroupChatReceiver gcr = new GroupChatReceiver("MDP Servicer");
+			
+			clientsPanel = new ClientsPanel();
+			chatPanel = new ChatPanel(initializeUnicastSender());
+			appointmentsPanel = new AppointmentsPanel();
+			sparePartsPanel = new SparePartsPanel();
+			ordersPanel = new OrdersPanel();
+			
+			ucr.setChatPanel(chatPanel);
+			gcr.setChatPanel(chatPanel);
+			ucr.start();
+			gcr.start();
+		} catch(IOException e){
+			e.printStackTrace();
+		}
 		
-		setSize(800, 600);
+		setSize(900, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setLocationRelativeTo(null);
 
@@ -67,12 +109,16 @@ public class MainWindow extends JFrame {
 		
 		attachAppointmentsAction();
 		attachClientsAction();
+		attachChatAction();
 		attachSparePartsAction();
+		attachOrdersAction();
 		attachExitAction();
 		
 		header.add(clientsLink);
+		header.add(chatLink);
 		header.add(appointmentsLink);
 		header.add(sparePartsLink);
+		header.add(ordersLink);
 		header.add(exitLink);
 		
 		return header;
@@ -83,6 +129,10 @@ public class MainWindow extends JFrame {
 		clientsLink = new JLabel(clientsLinkName, clientsIcon, JLabel.LEFT);
 		clientsLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
+		ImageIcon chatIcon = new ImageIcon("icons\\icons8-chat-36.png");
+		chatLink = new JLabel(chatLinkName, chatIcon, JLabel.LEFT);
+		chatLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
 		ImageIcon appointmentsIcon = new ImageIcon("icons\\icons8-appointments-36.png");
 		appointmentsLink = new JLabel(appointmentsLinkName, appointmentsIcon, JLabel.LEFT);
 		appointmentsLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -91,11 +141,30 @@ public class MainWindow extends JFrame {
 		sparePartsLink = new JLabel(sparePartsLinkName, sparePartsIcon, JLabel.LEFT);
 		sparePartsLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
+		ImageIcon ordersIcon = new ImageIcon("icons\\icons8-order-36.png");
+		ordersLink = new JLabel(ordersLinkName, ordersIcon, JLabel.LEFT);
+		ordersLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
 		ImageIcon exitIcon = new ImageIcon("icons\\icons8-exit-36.png");
 		exitLink = new JLabel("Exit", exitIcon, JLabel.LEFT);
 		exitLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		underlineSelectedLink(Screen.CLIENTS);
+	}
+	
+	private UnicastChatSender initializeUnicastSender() {
+	    final int TCP_PORT = 15000;
+	    UnicastChatSender sender = null;
+
+	    try {
+	        InetAddress addr = InetAddress.getByName("127.0.0.1");
+	        Socket sock = new Socket(addr, TCP_PORT);
+	        sender = new UnicastChatSender(sock, "MDP Servicer");
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+
+	    return sender;
 	}
 	
 	private void attachClientsAction() {
@@ -105,6 +174,16 @@ public class MainWindow extends JFrame {
             	clientsPanel.refreshTable();
             	underlineSelectedLink(Screen.CLIENTS);
                 changeCurrentScreen(Screen.CLIENTS);
+            }
+        });
+    }
+	
+	private void attachChatAction() {
+		chatLink.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	underlineSelectedLink(Screen.CHAT);
+                changeCurrentScreen(Screen.CHAT);
             }
         });
     }
@@ -131,6 +210,17 @@ public class MainWindow extends JFrame {
         });
     }
 	
+	private void attachOrdersAction() {
+		ordersLink.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	ordersPanel.refreshTable();
+            	underlineSelectedLink(Screen.ORDERS);
+                changeCurrentScreen(Screen.ORDERS);
+            }
+        });
+    }
+	
 	private void attachExitAction() {
 		exitLink.addMouseListener(new MouseAdapter() {
             @Override
@@ -144,10 +234,14 @@ public class MainWindow extends JFrame {
 		JPanel newCurrentPanel;
 		if(screen == Screen.APPOINTMENTS)
 			newCurrentPanel = appointmentsPanel;
+		else if(screen == Screen.CHAT)
+			newCurrentPanel = chatPanel;
 		else if(screen == Screen.CLIENTS)
 			newCurrentPanel = clientsPanel;
-		else
+		else if(screen == Screen.SPARE_PARTS)
 			newCurrentPanel = sparePartsPanel;
+		else 
+			newCurrentPanel = ordersPanel;
 		
 		remove(currentPanel);
 		
@@ -164,6 +258,10 @@ public class MainWindow extends JFrame {
 			clientsLink.setForeground(Color.BLUE);
 			clientsLink.setText("<html><u>" + clientsLinkName + "</u></html>");
 		}
+		else if(Screen.CHAT == selected) {
+			chatLink.setForeground(Color.BLUE);
+			chatLink.setText("<html><u>" + chatLinkName + "</u></html>");
+		}
 		else if(Screen.APPOINTMENTS == selected) {
 			appointmentsLink.setForeground(Color.BLUE);
 			appointmentsLink.setText("<html><u>" + appointmentsLinkName + "</u></html>");
@@ -172,6 +270,10 @@ public class MainWindow extends JFrame {
 			sparePartsLink.setForeground(Color.BLUE);
 			sparePartsLink.setText("<html><u>" + sparePartsLinkName + "</u></html>");
 		}
+		else if(Screen.ORDERS == selected) {
+			ordersLink.setForeground(Color.BLUE);
+			ordersLink.setText("<html><u>" + ordersLinkName + "</u></html>");
+		}
 	}
 	
 	private void deselectAllLinks() {
@@ -179,8 +281,12 @@ public class MainWindow extends JFrame {
 		appointmentsLink.setText(appointmentsLinkName);
 		clientsLink.setForeground(Color.BLACK);
 		clientsLink.setText(clientsLinkName);
+		chatLink.setForeground(Color.BLACK);
+		chatLink.setText(chatLinkName);
 		sparePartsLink.setForeground(Color.BLACK);
 		sparePartsLink.setText(sparePartsLinkName);
+		ordersLink.setForeground(Color.BLACK);
+		ordersLink.setText(ordersLinkName);
 	}
 
 	private void setPageFont() {

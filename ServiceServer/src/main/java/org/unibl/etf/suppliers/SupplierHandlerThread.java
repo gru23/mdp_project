@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import org.unibl.etf.order.OrderingArticle;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -55,11 +57,11 @@ public class SupplierHandlerThread extends Thread {
                     Gson gson = new GsonBuilder().create();
 
                     // tip za ArrayList<Article>
-                    Type listType = new TypeToken<ArrayList<Article>>(){}.getType();
-                    ArrayList<Article> articles = gson.fromJson(json, listType);
+                    Type listType = new TypeToken<ArrayList<OrderingArticle>>(){}.getType();
+                    ArrayList<OrderingArticle> articles = gson.fromJson(json, listType);
 
                     // ispis da vidiš
-                    for (Article a : articles) {
+                    for (OrderingArticle a : articles) {
                         System.out.println(a);
                     }
                 }

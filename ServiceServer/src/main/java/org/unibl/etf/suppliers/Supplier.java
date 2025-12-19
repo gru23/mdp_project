@@ -2,9 +2,11 @@ package org.unibl.etf.suppliers;
 
 import java.util.ArrayList;
 
+import org.unibl.etf.order.OrderingArticle;
+
 public class Supplier {
 	private String name;
-	private ArrayList<Article> articles;
+	private ArrayList<OrderingArticle> articles;
 	
 	public Supplier() {
 		super();
@@ -13,7 +15,14 @@ public class Supplier {
 	public Supplier(String name) {
 		super();
 		this.name = name;
-		this.articles = new ArrayList<Article>();
+		this.articles = new ArrayList<OrderingArticle>();
+	}
+
+
+	public Supplier(String supplierName, ArrayList<OrderingArticle> payload) {
+		super();
+		this.name = supplierName;
+		this.articles = payload;
 	}
 
 	public String getName() {
@@ -24,11 +33,11 @@ public class Supplier {
 		this.name = name;
 	}
 
-	public ArrayList<Article> getArticles() {
+	public ArrayList<OrderingArticle> getArticles() {
 		return articles;
 	}
 
-	public void setArticles(ArrayList<Article> articles) {
+	public void setArticles(ArrayList<OrderingArticle> articles) {
 		this.articles = articles;
 	}
 	

@@ -1,6 +1,7 @@
 package org.unibl.etf.articles;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Article implements Serializable {
 	private static final long serialVersionUID = 2544867697380729261L;
@@ -59,5 +60,22 @@ public class Article implements Serializable {
 	public String toString() {
 		return "Article [code=" + code + ", name=" + name + ", manufacturer=" + manufacturer + ", price=" + price
 				+ "€, image=" + image + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(code);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Article other = (Article) obj;
+		return Objects.equals(code, other.code);
 	}
 }

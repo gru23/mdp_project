@@ -35,9 +35,13 @@ public class ChatServer {
     }
 	
 	public static void forwardMessage(String sender, String receiver, String message) {
+		System.out.println("ISPIS Sa servera " + "  " + sender + " " + receiver + " " + message);
+		System.out.print("ISPIS svih klijenata ");
+		clients.keySet().forEach(System.out::println);
 		ClientHandler handler = clients.get(receiver);
 		
 		if (handler != null) {
+			System.out.println("ISPIS ako postoji handler: " + sender + "#" + receiver + "#" + message);
             handler.send(sender + "#" + receiver + "#" + message);
         } else {
             ClientHandler senderHandler = clients.get(sender);

@@ -73,9 +73,12 @@ class AppointmentStatusComboBoxEditor extends DefaultCellEditor {
                 AppointmentService service = new AppointmentService();
                 ap.setStatus(AppointmentStatus.valueOf(newStatus));
                 service.updateAppointment(ap.getId(), ap);
+                String message = "Appointment status has been updated. ";
+                if(AppointmentStatus.REPAIRED == ap.getStatus())
+                	message += "Invoice has been sent to client.";
                 JOptionPane.showMessageDialog(
                         table,
-                        "Appointment status has been updated.",
+                        message,
                         "Updated",
                         JOptionPane.INFORMATION_MESSAGE
                  );

@@ -2,6 +2,7 @@ package org.unibl.etf.parts;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.unibl.etf.exceptions.NotFoundException;
@@ -58,6 +59,18 @@ public class PartService {
 		    throw new NotFoundException("Part with code " + code + " does not exist.");
 		}
 		partDAO.deletePart(code);
-
+	}
+	
+	public PartEntity sellRandomPart() {
+		ArrayList<PartEntity> allParts = readAll();
+        PartEntity randomPart = allParts.get((new Random()).nextInt(allParts.size()));
+        randomPart.setQuantity(randomPart.getQuantity() - 1);
+        try {
+			update(randomPart.getCode(), randomPart);
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+		}
+        randomPart.setQuantity(1);
+        return randomPart;
 	}
 }

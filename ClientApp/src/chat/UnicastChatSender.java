@@ -15,7 +15,7 @@ public class UnicastChatSender {
         this.username = username;
 		try {
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-			out.println(username);
+//			out.println(username);
 			System.out.println("posl'o username: " + username);
 		} catch (IOException e) {
 			e.printStackTrace();
