@@ -6,9 +6,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import org.unibl.etf.order.enums.MessageType;
 import org.unibl.etf.order.enums.OrderStatus;
+import org.unibl.etf.parts.PartEntity;
+import org.unibl.etf.parts.PartService;
 import org.unibl.etf.suppliers.Supplier;
 
 import com.google.gson.Gson;
@@ -84,8 +88,18 @@ public class SupplierHandler extends Thread {
 	
 	public void handleMessageOrder(MessageOrder msg) {
 		System.out.println("Order processed by " + msg.getSupplierName());
-		msg.getPayload().setStatus(OrderStatus.APPROVED);
 		System.out.println("DODAJE SE OREDER SA ID " + msg.getPayload().getId());
+		if(OrderStatus.APPROVED == msg.getPayload().getStatus()) {
+			PartService partService = new PartService();
+			ArrayList<PartEntity> parts = msg.getPayload()
+					.getArticles()
+					.stream()
+					.map(PartEntity::new)
+					.collect(Collectors.toCollection(ArrayList::new));
+			for(PartEntity e : parts) {
+				partService.add(e);
+			}
+		}
 		OrderDAO.getInstance().addOrder(msg.getPayload());
 	}
 	

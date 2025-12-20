@@ -67,6 +67,14 @@ public class SupplierServer extends Thread {
 				else if(line.startsWith("GET_ALL")) {
 					out.println("OK|" + gson.toJson(articleService.getAllArticles()));
 				}
+				else if(line.startsWith("ORDER_UPDATE")) {
+					String[] split = line.split("\\|", 2);
+					if (split.length < 2) {
+                        out.println("ERROR|Invalid format");
+                        continue;
+                    }
+					AppSession.getInstance().getOrderClient().updateOrder(split[1]);
+				}
 				else 
 					out.println("ERROR|Unknown command");
 				

@@ -54,8 +54,11 @@ public class JsoupParsing {
 //			}
 //		}
 //		System.out.println("Number of parsed articles: " + articles.size());
+		
+		// next two lines are for incase web scraping be rejected or no internet connection
 		//writeArticlesToFile(articles, "C:\\Users\\Administrator\\Desktop\\articles.txt");
 		articles = readArticlesFromFile("C:\\Users\\Administrator\\Desktop\\articles.txt");
+		
 		return articles;
 	}
 	

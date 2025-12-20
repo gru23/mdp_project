@@ -2,6 +2,8 @@ package org.unibl.etf.parts;
 
 import java.io.Serializable;
 
+import org.unibl.etf.order.OrderingArticle;
+
 public class PartEntity implements Serializable  {
 	private static final long serialVersionUID = 3389606408315366151L;
 	
@@ -24,6 +26,16 @@ public class PartEntity implements Serializable  {
 		this.price = price;
 		this.quantity = quantity;
 		this.description = description;
+	}
+	
+	public PartEntity(OrderingArticle article) {
+		super();
+		this.code = article.getCode();
+		this.name = article.getName();
+		this.manufacturer = article.getManufacturer();
+		this.price = article.getPrice();
+		this.quantity = article.getQuanity();
+		this.description = "";
 	}
 
 	public String getCode() {

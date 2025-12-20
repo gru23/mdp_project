@@ -17,6 +17,7 @@ import org.unibl.etf.client.gui.OrdersPanel;
 import org.unibl.etf.orders.Order;
 import org.unibl.etf.server.sockets.MessageOrder;
 import org.unibl.etf.server.sockets.MessageType;
+import org.unibl.etf.utils.AppSession;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -57,7 +58,6 @@ public class SupplierClient {
 	        String line = in.readLine();
 
 	        if (line != null && line.startsWith("OK")) {
-	            Gson gson = new Gson();
 	            String jsonString = line.split("\\|", 2)[1];
 
 	            Type listType = new TypeToken<ArrayList<Article>>() {}.getType();
@@ -72,7 +72,6 @@ public class SupplierClient {
 
 	public ArrayList<Article> addArticle(Article newArticle) {
 		ArrayList<Article> articles = new ArrayList<>();
-		Gson gson = new Gson();
 
 	    try {
 	    	String articleJSON = gson.toJson(newArticle);
@@ -93,6 +92,16 @@ public class SupplierClient {
 	    }
 
 	    return articles;
+	}
+	
+	public void updateOrder(Order order) {
+		MessageOrder messageOrder = new MessageOrder(
+				MessageType.ORDER_ACK, 
+				AppSession.getInstance().getSupplierName(), 
+				order
+		);
+		out.println("ORDER_UPDATE|" + gson.toJson(messageOrder));
+		
 	}
 	
 	private void listen() {

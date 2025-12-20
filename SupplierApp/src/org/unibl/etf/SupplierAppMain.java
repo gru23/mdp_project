@@ -25,7 +25,7 @@ public class SupplierAppMain {
 			
 			SwingUtilities.invokeLater(() -> {
                 new MainWindow(supplierClient);
-                supplierClient.startListening();
+//                supplierClient.startListening();	//already started in constructor MainWindow(supplierClient)
             });
 			
 			AppSession.getInstance().getOrderClient();

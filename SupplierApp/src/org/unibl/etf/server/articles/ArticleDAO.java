@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.unibl.etf.articles.Article;
 import org.unibl.etf.utils.JsoupParsing;
@@ -23,7 +25,7 @@ public class ArticleDAO {
 //				e.printStackTrace();
 //			}
 			try {
-	            ArrayList<Article> parsedArticles = new JsoupParsing(urls).parseArticles();
+	            ArrayList<Article> parsedArticles = new JsoupParsing(getRandomUrls()).parseArticles();
 	            articles = new LinkedHashMap<>();
 	            if (parsedArticles != null) {
 	                for (Article a : parsedArticles) {
@@ -60,5 +62,18 @@ public class ArticleDAO {
 		urls.add("https://eeuroparts.com/belts-and-cooling/thermostats/");
 		urls.add("https://eeuroparts.com/electrical-and-lighting/headlights/");
 		urls.add("https://eeuroparts.com/electrical-and-lighting/fuses/");
+	}
+	
+	private ArrayList<String> getRandomUrls() {
+		Random rand = new Random();
+		ArrayList<String> urlsCopy = new ArrayList<String>();
+		int randomNumberOfUrls = rand.nextInt(urls.size()) + 1;
+		for(int i = 0; i < randomNumberOfUrls; i++) {
+			urlsCopy.add(urls.get(rand.nextInt(urls.size())));
+		}
+		return urlsCopy
+				.stream()
+	            .distinct()
+	            .collect(Collectors.toCollection(ArrayList::new));
 	}
 }

@@ -21,6 +21,8 @@ import org.unibl.etf.utils.AppSession;
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 4919451771802939504L;
+	
+	private SupplierClient supplierClient;
 
 	private JPanel currentPanel;
 
@@ -37,11 +39,12 @@ public class MainWindow extends JFrame {
 	
 	public MainWindow(SupplierClient supplierClient) {
 		setLayout(new BorderLayout());
+		this.supplierClient = supplierClient;
 		
 		String title = AppSession.getInstance().getSupplierName();
 		setTitle(title);
 	    articlesPanel = new ArticlesPanel(supplierClient);
-	    ordersPanel = new OrdersPanel();
+	    ordersPanel = new OrdersPanel(supplierClient);
 	    supplierClient.setOrdersPanel(ordersPanel);
 		
 		setSize(800, 600);
@@ -120,7 +123,9 @@ public class MainWindow extends JFrame {
 		exitLink.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MainWindow.this.dispose();
+//            	supplierClient.shutdown();
+            	System.exit(0);
+//                MainWindow.this.dispose();
             }
         });
     }

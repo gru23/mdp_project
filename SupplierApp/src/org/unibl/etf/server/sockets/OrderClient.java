@@ -58,6 +58,11 @@ public class OrderClient {
 	        	);
         out.println(gson.toJson(msg));
     }
+    
+    public void updateOrder(String orderMessageJson) {
+    	out.println(orderMessageJson);
+    	System.out.println("Narudzba otisla iz OrderClient -> SupplierHandler");
+    }
 
     private void listen() {
         try {

@@ -112,7 +112,7 @@ public class SparePartsPanel extends JPanel {
 		// Second column (Name)
 		TableColumn nameColumn = partsTable.getColumnModel().getColumn(2);
 		nameColumn.setPreferredWidth(160);
-		nameColumn.setMaxWidth(200);
+//		nameColumn.setMaxWidth(200);
 
 		// Third column (Manufacturer)
 		TableColumn manufacturerColumn = partsTable.getColumnModel().getColumn(3);

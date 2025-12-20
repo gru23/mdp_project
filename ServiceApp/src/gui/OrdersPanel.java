@@ -85,7 +85,7 @@ public class OrdersPanel extends JPanel {
 		for(Order o : orders) {
 			String date = LocalDate
 			        .parse(o.getDate())
-			        .format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
+			        .format(DateTimeFormatter.ofPattern("dd. MMM yyyy."));
 
 			Object[] row = {counter++ + ".", date, o.getId(), o.getSupplier(), o.getStatus()};
 			model.addRow(row);

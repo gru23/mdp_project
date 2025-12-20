@@ -3,7 +3,10 @@ package org.unibl.etf.client.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -13,6 +16,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import org.unibl.etf.client.sockets.SupplierClient;
 import org.unibl.etf.orders.Order;
 import org.unibl.etf.orders.OrderStatus;
 
@@ -22,10 +26,13 @@ public class OrdersPanel extends JPanel {
 	private JTable ordersTable;	
 	private ArrayList<Order> orders;	//mozda ipak cuvati narudzbe ovdje u memoriji
 	
-	public OrdersPanel() {
+	private SupplierClient supplierClient;
+	
+	public OrdersPanel(SupplierClient supplierClient) {
 		super(new BorderLayout());
 		orders = new ArrayList<Order>();
-		orders.add(new Order("31616dde-5f43-48ca-ba08-355f44f7405a", "MDP Servicer", "18.12.2025. ", OrderStatus.WAITING, null));
+		orders.add(new Order("31616dde-5f43-48ca-ba08-355f44f7405a", "MDP Servicer", "2025-12-18", OrderStatus.WAITING, null));
+		this.supplierClient = supplierClient;
 		
 		ordersTable = new JTable(getTable());
 		attachTableModelListener();
@@ -65,7 +72,8 @@ public class OrdersPanel extends JPanel {
         };
         int counter = 1;
         for (Order o : orders) {
-            Object[] row = {counter++ + ".", "MDP Servicer", o.getId(), o.getDate(), o.getStatus()};
+        	String dateString = LocalDate.parse(o.getDate()).format(DateTimeFormatter.ofPattern("dd. MMM yyyy.", Locale.ENGLISH));
+            Object[] row = {counter++ + ".", "MDP Servicer", o.getId(), dateString, o.getStatus()};
             model.addRow(row);
         }
         return model;
@@ -135,7 +143,7 @@ public class OrdersPanel extends JPanel {
 
 	            Order order = orders.stream().filter(o -> orderId.equals(o.getId())).findFirst().get();
 	            order.setStatus(newStatus);
-	            // orderService.updateOrderStatus(orderId, newStatus);
+	            supplierClient.updateOrder(order);
 	        }
 	    });
 	}
