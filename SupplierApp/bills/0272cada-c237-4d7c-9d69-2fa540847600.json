@@ -1,0 +1,28 @@
+{
+  "supplierName": "Supplier 184",
+  "order": {
+    "id": "0272cada-c237-4d7c-9d69-2fa540847600",
+    "supplier": "Supplier 184",
+    "date": "2025-12-22",
+    "status": "APPROVED",
+    "articles": [
+      {
+        "code": "4118815",
+        "name": "Wix XP 57021XP - Engine Oil Filter",
+        "manufacturer": "Wix",
+        "price": 7.95,
+        "quanity": 1
+      },
+      {
+        "code": "4118820",
+        "name": "Wix XP 57060XP - Engine Oil Filter (Main)",
+        "manufacturer": "Wix",
+        "price": 7.5,
+        "quanity": 2
+      }
+    ]
+  },
+  "amountWithoutTax": 22.95,
+  "tax": 3.90,
+  "total": 26.85
+}

@@ -32,6 +32,7 @@ public class MainWindow extends JFrame {
 	
 	public MainWindow() {
 		setLayout(new BorderLayout());
+		setTitle(AppSession.getInstance().getCurrentClient().getUsername());
 		
 		appointmentsPanel = new AppointmentsPanel();
 		chatPanel = new ChatPanel();

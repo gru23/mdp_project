@@ -2,6 +2,7 @@ package services;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import exceptions.ServerError;
 import models.Part;
@@ -25,12 +26,11 @@ public class SparePartService {
 		}
 	}
 	
-	public Part getPartByCode(String code) throws ServerError {
+	public Optional<Part> getPartByCode(String code) throws ServerError {
 		ArrayList<Part> parts = getAllParts();
 		return parts.stream()
 						.filter(p -> code.equals(p.getCode()))
-						.findFirst()
-						.get();
+						.findFirst();
 	}
 	
 	public Part createPart(Part newPart) throws ServerError {

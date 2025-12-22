@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -235,7 +236,13 @@ public class SparePartsPanel extends JPanel {
 		    	Part newPart = getEnteredPart();
 		        cleanForm();
 		        try {
-					partsService.createPart(newPart);
+		        	Optional<Part> existingPart = partsService.getPartByCode(newPart.getCode());
+		        	if(existingPart.isPresent()) {
+		        		partsService.updatePart(newPart.getCode(), newPart);
+		        	}
+		        	else {
+		        		partsService.createPart(newPart);
+		        	}
 				} catch (ServerError e1) {
 					e1.printStackTrace();
 				}

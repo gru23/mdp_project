@@ -72,6 +72,8 @@ public class MainWindow extends JFrame {
 	        UnicastChatReceiver ucr = new UnicastChatReceiver(sock);
 			GroupChatReceiver gcr = new GroupChatReceiver("MDP Servicer");
 			
+			setTitle("MDP Servicer");
+			
 			clientsPanel = new ClientsPanel();
 			chatPanel = new ChatPanel(initializeUnicastSender());
 			appointmentsPanel = new AppointmentsPanel();
