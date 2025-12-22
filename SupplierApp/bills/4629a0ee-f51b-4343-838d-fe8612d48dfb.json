@@ -1,0 +1,21 @@
+{
+  "supplierName": "Supplier 20",
+  "order": {
+    "id": "4629a0ee-f51b-4343-838d-fe8612d48dfb",
+    "supplier": "Supplier 20",
+    "date": "2025-12-22",
+    "status": "APPROVED",
+    "articles": [
+      {
+        "code": "969799",
+        "name": "Genuine BMW 34112284869 - Disc Brake Pad Set (Front)",
+        "manufacturer": "Genuine",
+        "price": 350.01,
+        "quanity": 2
+      }
+    ]
+  },
+  "amountWithoutTax": 700.02,
+  "tax": 119.00,
+  "total": 819.02
+}

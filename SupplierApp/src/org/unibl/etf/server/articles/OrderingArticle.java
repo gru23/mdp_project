@@ -1,8 +1,12 @@
 package org.unibl.etf.server.articles;
 
+import java.io.Serializable;
+
 import org.unibl.etf.articles.Article;
 
-public class OrderingArticle {
+public class OrderingArticle implements Serializable {
+	private static final long serialVersionUID = -3951782209528998653L;
+	
 	private String code;
 	private String name;
 	private String manufacturer;

@@ -1,0 +1,49 @@
+{
+  "supplierName": "Supplier 33",
+  "order": {
+    "id": "2b336a92-79ec-48a2-be72-e8a59bc09534",
+    "supplier": "Supplier 33",
+    "date": "2025-12-22",
+    "status": "APPROVED",
+    "articles": [
+      {
+        "code": "968173",
+        "name": "Genuine BMW 34216860403 - Disc Brake Pad Set (Rear)",
+        "manufacturer": "Genuine",
+        "price": 88.96,
+        "quanity": 1
+      },
+      {
+        "code": "969197",
+        "name": "Genuine BMW 34216761250 - Disc Brake Pad Set (Rear)",
+        "manufacturer": "Genuine",
+        "price": 176.27,
+        "quanity": 1
+      },
+      {
+        "code": "969274",
+        "name": "Genuine BMW 34116872632 - Disc Brake Pad Set (Front)",
+        "manufacturer": "Genuine",
+        "price": 116.48,
+        "quanity": 1
+      },
+      {
+        "code": "969329",
+        "name": "Genuine BMW 34116857096 - Disc Brake Pad Set (Front)",
+        "manufacturer": "Genuine",
+        "price": 172.69,
+        "quanity": 1
+      },
+      {
+        "code": "969445",
+        "name": "Genuine BMW 34211159963 - Disc Brake Pad Retaining Clip (Rear)",
+        "manufacturer": "Genuine",
+        "price": 48.95,
+        "quanity": 1
+      }
+    ]
+  },
+  "amountWithoutTax": 603.35,
+  "tax": 102.57,
+  "total": 705.92
+}

@@ -6,18 +6,30 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import org.unibl.etf.articles.Article;
+import org.unibl.etf.orders.OrderStatus;
+import org.unibl.etf.rmi.model.Bill;
+import org.unibl.etf.rmi.server.BookkeepingInterface;
 import org.unibl.etf.server.articles.ArticleService;
 import org.unibl.etf.server.articles.OrderingArticle;
 import org.unibl.etf.utils.AppSession;
+import org.unibl.etf.utils.ConnectionFactoryUtil;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Consumer;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
 
 public class OrderClient {
 	private Socket socket;
@@ -27,16 +39,28 @@ public class OrderClient {
 	
 	private ArticleService articleService;
 	
+	private Channel channel;
+	private String supplierName;
+	
+	private BookkeepingInterface bookkeeper;
+	
 	public OrderClient(String supplierName) {
 		try {
 			this.socket = new Socket("localhost", 9000);
 			this.gson = new Gson();
+			this.supplierName = supplierName;
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 			articleService = new ArticleService();
 			sendIntroduction();
 			new Thread(this::listen).start();
+			// MQ
+			channel = ConnectionFactoryUtil.createConnection().createChannel();
+			channel.queueDeclare(supplierName, false, false, false, null);
+			receiveOrder();
 		} catch(IOException e) {
+			e.printStackTrace();
+		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
 	}
@@ -59,9 +83,51 @@ public class OrderClient {
         out.println(gson.toJson(msg));
     }
     
+    public void receiveOrder() {
+    	Consumer consumer = new DefaultConsumer(channel) {
+			@Override
+			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
+					byte[] body) throws IOException {
+				
+				String json = new String(body, "UTF-8");
+	            System.out.println("📥 MQ primljena poruka: " + json);
+
+	            MessageOrder messageOrder = gson.fromJson(json, MessageOrder.class);
+				
+				handleMessageOrder(messageOrder);
+				System.out.println("Message received: '" + messageOrder + "'");
+			}
+		};
+		try {
+			channel.basicConsume(supplierName, true, consumer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
     public void updateOrder(String orderMessageJson) {
+    	sendBill(orderMessageJson);
     	out.println(orderMessageJson);
     	System.out.println("Narudzba otisla iz OrderClient -> SupplierHandler");
+    }
+    
+    private void sendBill(String orderMessageJson) {
+    	MessageOrder messageOrder = gson.fromJson(orderMessageJson, MessageOrder.class);
+    	if(OrderStatus.APPROVED == messageOrder.getPayload().getStatus()) {
+    		BigDecimal amountNoTax = messageOrder
+    			    .getPayload()
+    			    .getArticles()
+    			    .stream()
+    			    .map(a -> BigDecimal.valueOf(a.getPrice())
+    			            .multiply(BigDecimal.valueOf(a.getQuanity())))
+    			    .reduce(BigDecimal.ZERO, BigDecimal::add);
+    		Bill bill = new Bill(supplierName, messageOrder.getPayload(), amountNoTax);
+    		try {
+				bookkeeper.bookOrder(bill);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+    	}
     }
 
     private void listen() {
@@ -122,5 +188,9 @@ public class OrderClient {
         return articles.stream()
                        .map(OrderingArticle::new)
                        .collect(Collectors.toCollection(ArrayList::new));
+    }
+    
+    public void setBookkeeper(BookkeepingInterface bookkeeper) {
+    	this.bookkeeper = bookkeeper;
     }
 }

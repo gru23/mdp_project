@@ -5,8 +5,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeoutException;
 
 import org.unibl.etf.suppliers.Supplier;
+import org.unibl.etf.util.ConnectionFactoryUtil;
+
+import com.rabbitmq.client.Connection;
 
 public class OrderServer {
 	public static final Map<String, Supplier> suppliers = new ConcurrentHashMap<>();
@@ -16,8 +20,17 @@ public class OrderServer {
 	
 	private Map<String, SupplierHandler> suppliersHandler;
 	
+	private Connection connection;
+	
 	public OrderServer() {
-		suppliersHandler = new ConcurrentHashMap<String, SupplierHandler>();
+		this.suppliersHandler = new ConcurrentHashMap<String, SupplierHandler>();
+		try {
+			this.connection = ConnectionFactoryUtil.createConnection();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void start() throws IOException {		
@@ -26,7 +39,7 @@ public class OrderServer {
 			
 			while(true) {
 				Socket socket = serverSocket.accept();
-				SupplierHandler handler = new SupplierHandler(socket, this);
+				SupplierHandler handler = new SupplierHandler(socket, this, connection);
 				handler.start();
 			}
 		}

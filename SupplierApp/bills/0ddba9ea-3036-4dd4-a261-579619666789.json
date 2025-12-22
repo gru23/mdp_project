@@ -1,0 +1,21 @@
+{
+  "supplierName": "Supplier 170",
+  "order": {
+    "id": "0ddba9ea-3036-4dd4-a261-579619666789",
+    "supplier": "Supplier 170",
+    "date": "2025-12-22",
+    "status": "APPROVED",
+    "articles": [
+      {
+        "code": "4118812",
+        "name": "Wix XP 51516XP - Engine Oil Filter",
+        "manufacturer": "Wix",
+        "price": 7.49,
+        "quanity": 6
+      }
+    ]
+  },
+  "amountWithoutTax": 44.94,
+  "tax": 7.64,
+  "total": 52.58
+}

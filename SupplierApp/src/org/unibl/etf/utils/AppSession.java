@@ -30,6 +30,10 @@ public class AppSession {
     	return supplierName;
     }
     
+    public void setSupplierName(String supplierName) {
+    	this.supplierName = supplierName;
+    }
+    
     public OrderClient getOrderClient() {
     	if(orderClient == null)
     		orderClient = new OrderClient(getSupplierName());

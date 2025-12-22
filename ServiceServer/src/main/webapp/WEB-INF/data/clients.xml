@@ -1,34 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="21.0.9" class="java.beans.XMLDecoder">
+<java version="11.0.2" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="org.unibl.etf.client.ClientEntity">
+    <void property="address">
+     <string>New York</string>
+    </void>
+    <void property="email">
+     <string>wick@mail.com</string>
+    </void>
+    <void property="firstName">
+     <string>John</string>
+    </void>
+    <void property="id">
+     <string>92d19b8c-86cb-42c5-88e6-1e27a2a72f9b</string>
+    </void>
+    <void property="lastName">
+     <string>Wick</string>
+    </void>
+    <void property="password">
+     <string>wick123</string>
+    </void>
+    <void property="phoneNumber">
+     <string>065/111-123</string>
+    </void>
+    <void property="status">
+     <object class="java.lang.Enum" method="valueOf">
+      <class>org.unibl.etf.client.AccountStatus</class>
+      <string>BLOCKED</string>
+     </object>
+    </void>
+    <void property="username">
+     <string>wick</string>
+    </void>
+    <void property="vehicleId">
+     <string>8e1f3ad2-4e9c-4f4a-9dfb-0c3bb0b6f1ae</string>
+    </void>
+   </object>
+  </void>
   <void method="add">
    <object class="org.unibl.etf.client.ClientEntity">
     <void property="address">
      <string>Banja Luka, Brace Potkonjaka 117</string>
     </void>
     <void property="email">
-     <string>gru@mail.com</string>
+     <string>grujo23@gmail.com</string>
     </void>
     <void property="firstName">
      <string>Grujica</string>
     </void>
-    <void property="isApproved">
-     <boolean>true</boolean>
-    </void>
-    <void property="isBlocked">
-     <boolean>false</boolean>
+    <void property="id">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
     </void>
     <void property="lastName">
-     <string>Vasić</string>
+     <string>Vasic</string>
     </void>
     <void property="password">
      <string>gru123</string>
     </void>
     <void property="phoneNumber">
-     <string>065/111-932</string>
+     <string>065/111-912</string>
+    </void>
+    <void property="status">
+     <object class="java.lang.Enum" id="AccountStatus0" method="valueOf">
+      <class>org.unibl.etf.client.AccountStatus</class>
+      <string>APPROVED</string>
+     </object>
     </void>
     <void property="username">
      <string>gru</string>
+    </void>
+    <void property="vehicleId">
+     <string>6b32c1d7-82ab-4c48-8ea0-35d4e5a13472</string>
     </void>
    </object>
   </void>
@@ -43,23 +86,60 @@
     <void property="firstName">
      <string>Milan</string>
     </void>
-    <void property="isApproved">
-     <boolean>false</boolean>
-    </void>
-    <void property="isBlocked">
-     <boolean>true</boolean>
+    <void property="id">
+     <string>f9f8aa41-cb1c-41a5-bd49-7667fa7a0705</string>
     </void>
     <void property="lastName">
-     <string>Tadić</string>
+     <string>Tadic</string>
     </void>
     <void property="password">
      <string>milan123</string>
     </void>
     <void property="phoneNumber">
-     <string>065/112-132</string>
+     <string>065/111-122</string>
+    </void>
+    <void property="status">
+     <object idref="AccountStatus0"/>
     </void>
     <void property="username">
      <string>milan</string>
+    </void>
+    <void property="vehicleId">
+     <string>0ba81362-83be-4160-afcf-de53bcdb89b3</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.client.ClientEntity">
+    <void property="address">
+     <string>Banja Luka, Krfska 11</string>
+    </void>
+    <void property="email">
+     <string>dragan@mail.com</string>
+    </void>
+    <void property="firstName">
+     <string>Dragan</string>
+    </void>
+    <void property="id">
+     <string>1b42b991-19d8-4da7-962b-04469269e189</string>
+    </void>
+    <void property="lastName">
+     <string>Jovic</string>
+    </void>
+    <void property="password">
+     <string>dragan123</string>
+    </void>
+    <void property="phoneNumber">
+     <string>065/121-212</string>
+    </void>
+    <void property="status">
+     <object idref="AccountStatus0"/>
+    </void>
+    <void property="username">
+     <string>dragan</string>
+    </void>
+    <void property="vehicleId">
+     <string>1f7a9d43-dbc5-4987-bc1e-0f7c8e29c3dd</string>
     </void>
    </object>
   </void>

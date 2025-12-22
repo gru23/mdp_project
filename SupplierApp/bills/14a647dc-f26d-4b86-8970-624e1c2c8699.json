@@ -1,0 +1,21 @@
+{
+  "supplierName": "Supplier 105",
+  "order": {
+    "id": "14a647dc-f26d-4b86-8970-624e1c2c8699",
+    "supplier": "Supplier 105",
+    "date": "2025-12-22",
+    "status": "APPROVED",
+    "articles": [
+      {
+        "code": "926315",
+        "name": "Genuine BMW 34216873093 - Disc Brake Pad Set (Rear)",
+        "manufacturer": "Genuine",
+        "price": 96.05,
+        "quanity": 1
+      }
+    ]
+  },
+  "amountWithoutTax": 96.05,
+  "tax": 16.33,
+  "total": 112.38
+}

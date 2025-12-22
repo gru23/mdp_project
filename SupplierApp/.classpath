@@ -8,5 +8,8 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jsoup-1.16.1.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.8.5.jar"/>
+	<classpathentry kind="lib" path="lib/amqp-client-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.21.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.7.22.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,11 +1,14 @@
 package org.unibl.etf.orders;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.unibl.etf.server.articles.OrderingArticle;
 
 
-public class Order {
+public class Order implements Serializable {
+	private static final long serialVersionUID = 8160705255272344618L;
+	
 	private String id;
 	private String supplier;
 	private String date;

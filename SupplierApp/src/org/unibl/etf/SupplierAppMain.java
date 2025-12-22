@@ -7,13 +7,17 @@ import javax.swing.SwingUtilities;
 
 import org.unibl.etf.client.gui.MainWindow;
 import org.unibl.etf.client.sockets.SupplierClient;
+import org.unibl.etf.rmi.client.BookkeepingClient;
+import org.unibl.etf.rmi.server.BookkeepingInterface;
 import org.unibl.etf.server.sockets.SupplierServer;
 import org.unibl.etf.utils.AppSession;
+import org.unibl.etf.utils.RemoteReferenceReader;
 
 public class SupplierAppMain {
 
 	public static void main(String[] args) {
 		try {			
+			AppSession.getInstance().setSupplierName(RemoteReferenceReader.readSupplierName());
 			SupplierServer server = new SupplierServer(0);
 			server.start();
 			AppSession.getInstance().setSupplierServer(server);
@@ -29,6 +33,9 @@ public class SupplierAppMain {
             });
 			
 			AppSession.getInstance().getOrderClient();
+			
+			BookkeepingInterface bookkeeper = BookkeepingClient.getBookkeeper();
+			AppSession.getInstance().getOrderClient().setBookkeeper(bookkeeper);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

@@ -1,47 +1,396 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="21.0.9" class="java.beans.XMLDecoder">
+<java version="11.0.2" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
   <void method="add">
-   <object class="appointment.AppointmentEntity">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>92d19b8c-86cb-42c5-88e6-1e27a2a72f9b</string>
+    </void>
     <void property="comment">
-     <string></string>
+     <string>Needs main battery change</string>
+    </void>
+    <void property="date">
+     <string>2026-01-25</string>
     </void>
     <void property="id">
-     <int>2</int>
+     <string>bd900027-81b6-42c4-a809-9b25130d07ae</string>
     </void>
-    <void property="isApproved">
-     <boolean>false</boolean>
-    </void>
-    <void property="type">
-     <object class="java.lang.Enum" method="valueOf">
-      <class>appointment.AppointmentType</class>
-      <string>REGULAR_SERVICE</string>
+    <void property="status">
+     <object class="java.lang.Enum" id="AppointmentStatus0" method="valueOf">
+      <class>org.unibl.etf.appointment.enums.AppointmentStatus</class>
+      <string>CONFIRMED</string>
      </object>
     </void>
-    <void property="username">
-     <string>gru</string>
+    <void property="time">
+     <string>13:00</string>
+    </void>
+    <void property="type">
+     <object class="java.lang.Enum" id="AppointmentType0" method="valueOf">
+      <class>org.unibl.etf.appointment.enums.AppointmentType</class>
+      <string>REPAIR</string>
+     </object>
     </void>
    </object>
   </void>
   <void method="add">
-   <object class="appointment.AppointmentEntity">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="comment">
+     <string>Replaced front brake pads and resurfaced rotors. Test drove vehicle; brakes now functioning properly.</string>
+    </void>
+    <void property="date">
+     <string>2026-01-29</string>
+    </void>
+    <void property="id">
+     <string>cc748984-38fc-4c18-b834-c2be072dbef8</string>
+    </void>
+    <void property="status">
+     <object class="java.lang.Enum" id="AppointmentStatus1" method="valueOf">
+      <class>org.unibl.etf.appointment.enums.AppointmentStatus</class>
+      <string>REPAIRED</string>
+     </object>
+    </void>
+    <void property="time">
+     <string>09:00</string>
+    </void>
+    <void property="type">
+     <object class="java.lang.Enum" id="AppointmentType1" method="valueOf">
+      <class>org.unibl.etf.appointment.enums.AppointmentType</class>
+      <string>REGULAR_SERVICE</string>
+     </object>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>f9f8aa41-cb1c-41a5-bd49-7667fa7a0705</string>
+    </void>
+    <void property="comment">
+     <string>Performed full oil change and replaced oil filter. Checked all fluid levels and topped off as needed.</string>
+    </void>
+    <void property="date">
+     <string>2026-01-19</string>
+    </void>
+    <void property="id">
+     <string>ceb3f953-5aeb-4b5b-a5a2-c9cd23683fd9</string>
+    </void>
+    <void property="status">
+     <object class="java.lang.Enum" id="AppointmentStatus2" method="valueOf">
+      <class>org.unibl.etf.appointment.enums.AppointmentStatus</class>
+      <string>WAITING</string>
+     </object>
+    </void>
+    <void property="time">
+     <string>10:00</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType1"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="comment">
+     <string>Replaced air filter and cabin filter. Vehicle running smoother and interior air quality improved.</string>
+    </void>
+    <void property="date">
+     <string>2026-01-11</string>
+    </void>
+    <void property="id">
+     <string>c36638ea-a45b-47e3-bbcf-fd1dc850fe06</string>
+    </void>
+    <void property="status">
+     <object class="java.lang.Enum" id="AppointmentStatus3" method="valueOf">
+      <class>org.unibl.etf.appointment.enums.AppointmentStatus</class>
+      <string>REJECTED</string>
+     </object>
+    </void>
+    <void property="time">
+     <string>15:45</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType0"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>92d19b8c-86cb-42c5-88e6-1e27a2a72f9b</string>
+    </void>
+    <void property="comment">
+     <string>Diagnosed check engine light: replaced faulty oxygen sensor. Cleared codes and verified engine performance.</string>
+    </void>
+    <void property="date">
+     <string>2026-01-03</string>
+    </void>
+    <void property="id">
+     <string>067b2d29-abdf-4070-abd3-42819a6d965c</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus0"/>
+    </void>
+    <void property="time">
+     <string>08:30</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType1"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="comment">
+     <string>Rotated tires and checked alignment. Tire wear now even and steering improved.</string>
+    </void>
+    <void property="date">
+     <string>2026-01-28</string>
+    </void>
+    <void property="id">
+     <string>d0d25140-bb44-49ca-9af5-325f0b699bce</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus0"/>
+    </void>
+    <void property="time">
+     <string>13:00</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType1"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="comment">
+     <string>Replaced battery and cleaned terminals. Verified charging system and electrical components functioning correctly.</string>
+    </void>
+    <void property="date">
+     <string>2026-01-28</string>
+    </void>
+    <void property="id">
+     <string>b8323242-044b-478c-8e70-d92f70195153</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus2"/>
+    </void>
+    <void property="time">
+     <string>14:00</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType1"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>bd900027-81b6-42c4-a809-9b25130d07ae</string>
+    </void>
+    <void property="comment">
+     <string>Oil and oil filter has been chaged.</string>
+    </void>
+    <void property="date">
+     <string>2026-01-05</string>
+    </void>
+    <void property="id">
+     <string>a89c3b3a-160f-4b35-afd2-5d8739963876</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus1"/>
+    </void>
+    <void property="time">
+     <string>09:00</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType1"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="comment">
+     <string>Serviced cooling system: flushed radiator, replaced coolant, and inspected hoses. No leaks detected.</string>
+    </void>
+    <void property="date">
+     <string>2025-12-08</string>
+    </void>
+    <void property="id">
+     <string>e52a4e3e-c6aa-4cf4-a482-e0b374175ad2</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus1"/>
+    </void>
+    <void property="time">
+     <string>13:00</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType0"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="comment">
+     <string>Replaced serpentine belt and tensioner. Checked pulleys; all moving smoothly with no unusual noise.</string>
+    </void>
+    <void property="date">
+     <string>2025-12-08</string>
+    </void>
+    <void property="id">
+     <string>8ec44141-e6e9-48ee-85ae-af3508534eea</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus1"/>
+    </void>
+    <void property="time">
+     <string>14:00</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType1"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
     <void property="comment">
      <string></string>
     </void>
-    <void property="id">
-     <int>2</int>
+    <void property="date">
+     <string>2025-12-09</string>
     </void>
-    <void property="isApproved">
-     <boolean>false</boolean>
+    <void property="id">
+     <string>9d7f895a-54e8-4880-8df8-cd87d5839839</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus0"/>
+    </void>
+    <void property="time">
+     <string>10:00</string>
     </void>
     <void property="type">
-     <object class="java.lang.Enum" method="valueOf">
-      <class>appointment.AppointmentType</class>
-      <string>REPAIR</string>
-     </object>
+     <object idref="AppointmentType0"/>
     </void>
-    <void property="username">
-     <string>milan</string>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="comment">
+     <string></string>
+    </void>
+    <void property="date">
+     <string>2025-12-08</string>
+    </void>
+    <void property="id">
+     <string>bfa60509-21d6-47d5-806e-eb3d099652bb</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus0"/>
+    </void>
+    <void property="time">
+     <string>08:00</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType0"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="comment">
+     <string>Service not opened.</string>
+    </void>
+    <void property="date">
+     <string>2025-12-08</string>
+    </void>
+    <void property="id">
+     <string>6effeece-bff1-466b-9576-b30a51ffa8e8</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus3"/>
+    </void>
+    <void property="time">
+     <string>01:00</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType1"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>1b42b991-19d8-4da7-962b-04469269e189</string>
+    </void>
+    <void property="comment">
+     <string></string>
+    </void>
+    <void property="date">
+     <string>2026-01-25</string>
+    </void>
+    <void property="id">
+     <string>d2d219f3-3b52-445d-b3b1-415ec09b1aa0</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus0"/>
+    </void>
+    <void property="time">
+     <string>14:00</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType0"/>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.appointment.AppointmentEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="comment">
+     <string></string>
+    </void>
+    <void property="date">
+     <string>2025-12-21</string>
+    </void>
+    <void property="id">
+     <string>f8761662-cddd-45ba-90bf-5529df7fff77</string>
+    </void>
+    <void property="status">
+     <object idref="AppointmentStatus1"/>
+    </void>
+    <void property="time">
+     <string>13:37</string>
+    </void>
+    <void property="type">
+     <object idref="AppointmentType1"/>
     </void>
    </object>
   </void>

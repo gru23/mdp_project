@@ -2,9 +2,11 @@ package org.unibl.etf.order;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -18,6 +20,8 @@ import org.unibl.etf.suppliers.Supplier;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
 
 public class SupplierHandler extends Thread {
 	
@@ -29,10 +33,17 @@ public class SupplierHandler extends Thread {
 	private String supplierName;
 	private OrderServer server;
 	
-	public SupplierHandler(Socket socket, OrderServer server) {
+	private Channel channel;
+	
+	public SupplierHandler(Socket socket, OrderServer server, Connection connection) {
 		this.socket = socket;
 		this.server = server;
 		this.gson = new Gson();
+		try {
+			channel = connection.createChannel();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -61,12 +72,20 @@ public class SupplierHandler extends Thread {
 			System.out.println("Dobavljač prekinuo vezu: " + supplierName);
 			server.unregisterSupplier(supplierName);
 		}
+		finally {
+	        try { if (channel != null) channel.close(); } catch (Exception ignored) {}
+	    }
 	}
 	
 	public void handleMessage(Message message) {
 		switch (message.getType()) {
 		case NEW_CUPCAKE:
 			supplierName = message.getSupplierName();
+			try {
+				channel.queueDeclare(supplierName, false, false, false, null);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			server.registerSupplier(supplierName, this);
 			server.addSupplier(new Supplier(supplierName, message.getPayload()));
 			break;
@@ -107,9 +126,17 @@ public class SupplierHandler extends Thread {
 		out.println(gson.toJson(message));
 	}
 	
-	public void sendOrder(MessageOrder order) {
-		out.println(gson.toJson(order));
-		System.out.println("Order proslijedjen supplier serveru (OrderClient)");
+	public void sendOrder(MessageOrder order) {		
+		try {
+			String json = gson.toJson(order);
+			channel.basicPublish("", supplierName, null, json.getBytes("UTF-8"));
+			//out.println(gson.toJson(order));
+			System.out.println("Order proslijedjen supplier serveru (OrderClient)");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void sendAck(MessageType type) {

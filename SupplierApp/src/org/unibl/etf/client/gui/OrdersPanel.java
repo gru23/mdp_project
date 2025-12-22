@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,7 +25,7 @@ public class OrdersPanel extends JPanel {
 	private static final long serialVersionUID = 2136472882291460805L;
 
 	private JTable ordersTable;	
-	private ArrayList<Order> orders;	//mozda ipak cuvati narudzbe ovdje u memoriji
+	private ArrayList<Order> orders;
 	
 	private SupplierClient supplierClient;
 	
@@ -71,12 +72,19 @@ public class OrdersPanel extends JPanel {
 		    }
         };
         int counter = 1;
+        orders = orders.stream().sorted((o1, o2) -> compareDates(o1.getDate(), o2.getDate())).collect(Collectors.toCollection(ArrayList::new));
         for (Order o : orders) {
         	String dateString = LocalDate.parse(o.getDate()).format(DateTimeFormatter.ofPattern("dd. MMM yyyy.", Locale.ENGLISH));
             Object[] row = {counter++ + ".", "MDP Servicer", o.getId(), dateString, o.getStatus()};
             model.addRow(row);
         }
         return model;
+	}
+	
+	private int compareDates(String date1, String date2) {
+		LocalDate ld1 = LocalDate.parse(date1);
+		LocalDate ld2 = LocalDate.parse(date2);
+		return ld1.compareTo(ld2);
 	}
 	
 	private JTable formatTable(JTable articlesTable) {

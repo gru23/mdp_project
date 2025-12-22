@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="11.0.2" class="java.beans.XMLDecoder">
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="org.unibl.etf.vehicle.VehicleEntity">
+    <void property="clientId">
+     <string>92d19b8c-86cb-42c5-88e6-1e27a2a72f9b</string>
+    </void>
+    <void property="id">
+     <string>8e1f3ad2-4e9c-4f4a-9dfb-0c3bb0b6f1ae</string>
+    </void>
+    <void property="manufacturer">
+     <string>Subaru</string>
+    </void>
+    <void property="model">
+     <string>Impreza</string>
+    </void>
+    <void property="registrationPlate">
+     <string>T31-699</string>
+    </void>
+    <void property="year">
+     <int>2016</int>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.vehicle.VehicleEntity">
+    <void property="clientId">
+     <string>1b42b991-19d8-4da7-962b-04469269e189</string>
+    </void>
+    <void property="id">
+     <string>1f7a9d43-dbc5-4987-bc1e-0f7c8e29c3dd</string>
+    </void>
+    <void property="manufacturer">
+     <string>Nissan</string>
+    </void>
+    <void property="model">
+     <string>Micra</string>
+    </void>
+    <void property="registrationPlate">
+     <string>K71-621</string>
+    </void>
+    <void property="year">
+     <int>2020</int>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.vehicle.VehicleEntity">
+    <void property="clientId">
+     <string>21e61d09-a02f-4c52-9b02-ffdcd3a13116</string>
+    </void>
+    <void property="id">
+     <string>6b32c1d7-82ab-4c48-8ea0-35d4e5a13472</string>
+    </void>
+    <void property="manufacturer">
+     <string>Toyota</string>
+    </void>
+    <void property="model">
+     <string>Corolla</string>
+    </void>
+    <void property="registrationPlate">
+     <string>M87-T-231</string>
+    </void>
+    <void property="year">
+     <int>1989</int>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="org.unibl.etf.vehicle.VehicleEntity">
+    <void property="clientId">
+     <string>f9f8aa41-cb1c-41a5-bd49-7667fa7a0705</string>
+    </void>
+    <void property="id">
+     <string>0ba81362-83be-4160-afcf-de53bcdb89b3</string>
+    </void>
+    <void property="manufacturer">
+     <string>Mazda</string>
+    </void>
+    <void property="model">
+     <string>MX-5</string>
+    </void>
+    <void property="registrationPlate">
+     <string>M34-3-33</string>
+    </void>
+    <void property="year">
+     <int>1999</int>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

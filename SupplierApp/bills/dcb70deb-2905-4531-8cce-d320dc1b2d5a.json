@@ -1,0 +1,21 @@
+{
+  "supplierName": "Supplier 17",
+  "order": {
+    "id": "dcb70deb-2905-4531-8cce-d320dc1b2d5a",
+    "supplier": "Supplier 17",
+    "date": "2025-12-21",
+    "status": "APPROVED",
+    "articles": [
+      {
+        "code": "927510",
+        "name": "Genuine BMW 34111163416 - Disc Brake Pad Retaining Clip",
+        "manufacturer": "Genuine",
+        "price": 44.7,
+        "quanity": 2
+      }
+    ]
+  },
+  "amountWithoutTax": 89.4,
+  "tax": 15.20,
+  "total": 104.60
+}
