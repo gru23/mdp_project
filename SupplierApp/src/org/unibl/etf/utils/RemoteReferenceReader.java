@@ -7,8 +7,8 @@ import java.io.IOException;
 
 public class RemoteReferenceReader {
 
-    private static final String PATH = "resources";
-    private static final String FILE_NAME = "remote_reference.txt";
+    private static final String PATH = Config.get("remote.reference.resources");
+    private static final String FILE_NAME = Config.get("remote.reference.file");
 
     public static String readSupplierName() {
         File file = new File(PATH + File.separator + FILE_NAME);

@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONObject;
 
@@ -14,7 +16,9 @@ import com.google.gson.Gson;
 import exceptions.InvalidLoginException;
 
 public class RestClient {
-	public static final String BASE_URL = "http://localhost:8080/ServiceServer/api/";
+	private static final Logger LOGGER = Logger.getLogger(RestClient.class.getName());
+	
+	public static final String BASE_URL = Config.get("rest.base.url");
 	
 	private static final Gson gson = new Gson();
 	
@@ -27,7 +31,7 @@ public class RestClient {
 	        conn.setRequestMethod(requestType);
 	        conn.setRequestProperty("Content-Type", "application/json");
 		} catch(IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "I/O Exception during opening HTTP connection.");
 		}
 		return conn;
 	}
@@ -39,7 +43,7 @@ public class RestClient {
             os.write(input.toString().getBytes());
             os.flush();
         } catch(IOException e) {
-        	e.printStackTrace();
+        	LOGGER.log(Level.SEVERE, "I/O Exception during sending HTTP request.");
         }
 	}
 	
@@ -65,7 +69,7 @@ public class RestClient {
 	            }
 	        }
 		} catch(IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "I/O Exception during reading HTTP response.");
 		}
 		return response.toString();
 	}

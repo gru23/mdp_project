@@ -45,6 +45,7 @@ public class MainWindow extends JFrame {
 		setTitle(title);
 	    articlesPanel = new ArticlesPanel(supplierClient);
 	    ordersPanel = new OrdersPanel(supplierClient);
+	    supplierClient.setArticlesPanel(articlesPanel);
 	    supplierClient.setOrdersPanel(ordersPanel);
 		
 		setSize(800, 600);
@@ -101,7 +102,8 @@ public class MainWindow extends JFrame {
 		sparePartsLink.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-            	articlesPanel.refreshTable();
+//            	articlesPanel.refreshTable();
+            	supplierClient.getAllArticles();
             	underlineSelectedLink(Screen.SPARE_PARTS);
                 changeCurrentScreen(Screen.SPARE_PARTS);
             }

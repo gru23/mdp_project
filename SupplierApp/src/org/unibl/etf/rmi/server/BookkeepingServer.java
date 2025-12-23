@@ -8,16 +8,19 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.unibl.etf.rmi.model.Bill;
 import org.unibl.etf.utils.AppSession;
+import org.unibl.etf.utils.Config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class BookkeepingServer implements BookkeepingInterface {
+	private static final Logger LOGGER = Logger.getLogger(BookkeepingServer.class.getName());
 	
-	private static final String PATH = "resources";
+	private static final String PATH = Config.get("path.resources");
 	private static String supplierName;
 	
 	public ArrayList<Bill> bills;
@@ -31,7 +34,7 @@ public class BookkeepingServer implements BookkeepingInterface {
 	}
 	
 	public static void main(String[] args) {
-		System.setProperty("java.security.policy", PATH + File.separator + "server_policyfile.txt");
+		System.setProperty("java.security.policy", PATH + File.separator + Config.get("server.policyfile"));
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
 		}
@@ -39,8 +42,6 @@ public class BookkeepingServer implements BookkeepingInterface {
 			BookkeepingServer server = new BookkeepingServer();
 			BookkeepingInterface stub = (BookkeepingInterface) UnicastRemoteObject.exportObject(server,
 					0);
-			
-			//Registry registry = LocateRegistry.createRegistry(1099);
 			
 			Registry registry;
 			try {
@@ -51,7 +52,7 @@ public class BookkeepingServer implements BookkeepingInterface {
 			}
 			
 			registry.rebind("Bookkeeping_" + supplierName, stub);
-			System.out.println("RMI server started.");
+			LOGGER.info("RMI server started.");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -60,8 +61,7 @@ public class BookkeepingServer implements BookkeepingInterface {
 	@Override
 	public void bookOrder(Bill bill) {
 		bills.add(bill);
-		System.out.println(bills.size());
-		System.out.println("RACUN PROKNJIZEN!");
+		LOGGER.info("Bill booked");
 		saveBillToFile(bill);
 	}
 
@@ -78,14 +78,14 @@ public class BookkeepingServer implements BookkeepingInterface {
 
 	    try (FileWriter writer = new FileWriter(file)) {
 	        writer.write(json);
-	        System.out.println("Bill saved: " + file.getAbsolutePath());
+	        LOGGER.info("Bill saved: " + file.getAbsolutePath());
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
 	}
 	
 	private void writeRemoteReference() {
-		try (FileWriter writer = new FileWriter(PATH + File.separator + "remote_reference.txt")) {
+		try (FileWriter writer = new FileWriter(PATH + File.separator + Config.get("remote.reference"))) {
 		    writer.write(supplierName);
 		} catch (IOException e) {
 		    e.printStackTrace();

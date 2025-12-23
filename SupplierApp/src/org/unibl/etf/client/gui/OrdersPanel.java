@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
@@ -20,9 +21,11 @@ import javax.swing.table.TableColumn;
 import org.unibl.etf.client.sockets.SupplierClient;
 import org.unibl.etf.orders.Order;
 import org.unibl.etf.orders.OrderStatus;
+import org.unibl.etf.utils.Config;
 
 public class OrdersPanel extends JPanel {
 	private static final long serialVersionUID = 2136472882291460805L;
+	private static final Logger LOGGER = Logger.getLogger(OrdersPanel.class.getName());
 
 	private JTable ordersTable;	
 	private ArrayList<Order> orders;
@@ -32,7 +35,7 @@ public class OrdersPanel extends JPanel {
 	public OrdersPanel(SupplierClient supplierClient) {
 		super(new BorderLayout());
 		orders = new ArrayList<Order>();
-		orders.add(new Order("31616dde-5f43-48ca-ba08-355f44f7405a", "MDP Servicer", "2025-12-18", OrderStatus.WAITING, null));
+		orders.add(new Order("31616dde-5f43-48ca-ba08-355f44f7405a", Config.get("servicer.name"), "2025-12-18", OrderStatus.WAITING, null));
 		this.supplierClient = supplierClient;
 		
 		ordersTable = new JTable(getTable());
@@ -75,7 +78,7 @@ public class OrdersPanel extends JPanel {
         orders = orders.stream().sorted((o1, o2) -> compareDates(o1.getDate(), o2.getDate())).collect(Collectors.toCollection(ArrayList::new));
         for (Order o : orders) {
         	String dateString = LocalDate.parse(o.getDate()).format(DateTimeFormatter.ofPattern("dd. MMM yyyy.", Locale.ENGLISH));
-            Object[] row = {counter++ + ".", "MDP Servicer", o.getId(), dateString, o.getStatus()};
+            Object[] row = {counter++ + ".", Config.get("servicer.name"), o.getId(), dateString, o.getStatus()};
             model.addRow(row);
         }
         return model;
@@ -144,11 +147,8 @@ public class OrdersPanel extends JPanel {
 
 	            String orderId = ordersTable.getValueAt(row, 2).toString();
 
-	            System.out.println(
-	                "STATUS PROMIJENJEN: orderId=" +
-	                orderId + ", novi status=" + newStatus
-	            );
-
+	            LOGGER.info("Order status has been changed: orderId=" + orderId + ", novi status=" + newStatus);
+	            
 	            Order order = orders.stream().filter(o -> orderId.equals(o.getId())).findFirst().get();
 	            order.setStatus(newStatus);
 	            supplierClient.updateOrder(order);

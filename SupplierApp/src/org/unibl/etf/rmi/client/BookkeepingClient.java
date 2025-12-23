@@ -3,11 +3,14 @@ package org.unibl.etf.rmi.client;
 import java.io.File;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Logger;
 
 import org.unibl.etf.rmi.server.BookkeepingInterface;
 import org.unibl.etf.utils.AppSession;
+import org.unibl.etf.utils.Config;
 
 public class BookkeepingClient {
+	private static final Logger LOGGER = Logger.getLogger(BookkeepingClient.class.getName());
 
     private static final String PATH = "resources";
     private static BookkeepingInterface bookkeeper;
@@ -19,10 +22,10 @@ public class BookkeepingClient {
         }
 
         try {
-            Registry registry = LocateRegistry.getRegistry(1099);
+            Registry registry = LocateRegistry.getRegistry(Config.getInt("registry.port"));
             String supplierName = AppSession.getInstance().getSupplierName();
             bookkeeper = (BookkeepingInterface) registry.lookup("Bookkeeping_" + supplierName);
-            System.out.println("RMI Bookkeeping client connected.");
+            LOGGER.info("RMI Bookkeeping client connected.");
         } catch (Exception e) {
             e.printStackTrace();
         }

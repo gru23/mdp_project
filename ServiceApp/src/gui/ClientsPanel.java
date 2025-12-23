@@ -145,7 +145,6 @@ public class ClientsPanel extends JPanel {
 		        int row = clientsTable.rowAtPoint(e.getPoint());
 		        int col = clientsTable.columnAtPoint(e.getPoint());
 
-		        // Kolona 8 je ikona
 		        if (col == 8) {
 		            String username = clientsTable.getValueAt(row, 3).toString();
 

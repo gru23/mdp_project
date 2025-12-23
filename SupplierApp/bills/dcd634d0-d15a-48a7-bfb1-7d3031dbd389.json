@@ -1,0 +1,28 @@
+{
+  "supplierName": "Supplier 131",
+  "order": {
+    "id": "dcd634d0-d15a-48a7-bfb1-7d3031dbd389",
+    "supplier": "Supplier 131",
+    "date": "2025-12-23",
+    "status": "APPROVED",
+    "articles": [
+      {
+        "code": "886874",
+        "name": "Genuine Mini 63129801035 - Headlight Assembly (Front Left)",
+        "manufacturer": "Genuine",
+        "price": 373.79,
+        "quanity": 1
+      },
+      {
+        "code": "887503",
+        "name": "Genuine Mini 63129807487 - Headlight Assembly (Left)",
+        "manufacturer": "Genuine",
+        "price": 729.35,
+        "quanity": 1
+      }
+    ]
+  },
+  "amountWithoutTax": 1103.14,
+  "tax": 187.53,
+  "total": 1290.67
+}

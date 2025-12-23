@@ -21,6 +21,7 @@ import javax.swing.JToolTip;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -50,6 +51,7 @@ public class ArticlesPanel extends JPanel {
 	public ArticlesPanel(SupplierClient supplierClient) {
 		super(new BorderLayout());
 		this.supplierClient = supplierClient;
+		this.articles = new ArrayList<>();
 		
 		articlesTable = new JTable(getTable());
 		
@@ -62,6 +64,13 @@ public class ArticlesPanel extends JPanel {
 		
 		add(initializeSubmitPanel(), BorderLayout.NORTH);
 		add(tableScrollPane, BorderLayout.CENTER);
+	}
+	
+	public void setAllArticles(ArrayList<Article> articles) {
+		SwingUtilities.invokeLater(() -> {
+	        this.articles = articles;
+	        refreshTable();
+	    });
 	}
 	
 	public void refreshTable() {
@@ -78,7 +87,7 @@ public class ArticlesPanel extends JPanel {
                 return false;
             }
         };
-        articles = supplierClient.getAllArticles();
+//        articles = supplierClient.getAllArticles();
         int counter = 1;
         
         for (Article a : articles) {
@@ -195,7 +204,7 @@ public class ArticlesPanel extends JPanel {
 		    	Article newPart = getEnteredArticle();
 		        cleanForm();
 		        supplierClient.addArticle(newPart);
-		        refreshTable();
+//		        refreshTable();
 		    }
 		});
 		third2.add(submitBtn);

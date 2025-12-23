@@ -9,6 +9,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.unibl.etf.order.enums.MessageType;
@@ -24,6 +26,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
 public class SupplierHandler extends Thread {
+	private static final Logger LOGGER = Logger.getLogger(SupplierHandler.class.getName());
 	
 	private Socket socket;
 	private BufferedReader in;
@@ -68,8 +71,7 @@ public class SupplierHandler extends Thread {
 		        }
 			}
 		} catch(Exception e) {
-//			e.printStackTrace();
-			System.out.println("Dobavljač prekinuo vezu: " + supplierName);
+			LOGGER.log(Level.SEVERE, "Supplier disconented " + supplierName, e);
 			server.unregisterSupplier(supplierName);
 		}
 		finally {
@@ -91,23 +93,18 @@ public class SupplierHandler extends Thread {
 			break;
 
 		case ITEMS_UPDATE:
-			System.out.println("Updated items by " + message.getSupplierName());
-			//preuzeti azurirane podatke
-			System.out.println("Broj artikala je " + message.getPayload().size());
 			server.addSupplier(new Supplier(message.getSupplierName(), message.getPayload()));
 			break;
 			
 		case ORDER_REQUEST:
-		    System.out.println("Primljena narudžba od servisa za dobavljača " + message.getSupplierName());
-		    // npr. obradi narudžbu i pošalji ACK
+			LOGGER.info("Order forwarded to " + message.getSupplierName());
 		    sendAck(MessageType.ORDER_ACK);
 		    break;
 		}
 	}
 	
 	public void handleMessageOrder(MessageOrder msg) {
-		System.out.println("Order processed by " + msg.getSupplierName());
-		System.out.println("DODAJE SE OREDER SA ID " + msg.getPayload().getId());
+		LOGGER.info("Order processed by " + msg.getSupplierName());
 		if(OrderStatus.APPROVED == msg.getPayload().getStatus()) {
 			PartService partService = new PartService();
 			ArrayList<PartEntity> parts = msg.getPayload()
@@ -130,8 +127,6 @@ public class SupplierHandler extends Thread {
 		try {
 			String json = gson.toJson(order);
 			channel.basicPublish("", supplierName, null, json.getBytes("UTF-8"));
-			//out.println(gson.toJson(order));
-			System.out.println("Order proslijedjen supplier serveru (OrderClient)");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

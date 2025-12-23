@@ -2,7 +2,10 @@ package org.unibl.etf.auth;
 
 import java.io.FileNotFoundException;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.unibl.etf.chats.ClientHandler;
 import org.unibl.etf.client.AccountStatus;
 import org.unibl.etf.client.Client;
 import org.unibl.etf.client.ClientDAO;
@@ -17,6 +20,8 @@ import org.unibl.etf.vehicle.VehicleDAO;
 import org.unibl.etf.vehicle.VehicleEntity;
 
 public class AuthService {
+	private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
+	
 	private final ClientDAO clientDAO;
 	private final VehicleDAO vehicleDAO;
 	
@@ -25,8 +30,6 @@ public class AuthService {
 		this.vehicleDAO = new VehicleDAO();
 	}
 	
-	
-	//add some password crypting
 	public Client login(LoginRequest request) throws InternalServerError, InvalidCredentialsException {
 		try {
 			Optional<ClientEntity> optionalEntity = clientDAO.findByUsername(request.getUsername());
@@ -37,7 +40,7 @@ public class AuthService {
 				throw new InvalidCredentialsException("Entered credentials are invalid!");
 			return new Client(optionalEntity.get());
 		} catch(FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Client file not found", e);
 			throw new InternalServerError();
 		}
 	}
@@ -56,11 +59,10 @@ public class AuthService {
 			entity.setVehicleId(savedVehicle.getId());
 			result = clientDAO.update(entity.getId(), entity);
 		} catch(FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Client file not found", e);
 			throw new InternalServerError();
 		} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Client not found", e);
 		}
 		return new Client(result);
 	}

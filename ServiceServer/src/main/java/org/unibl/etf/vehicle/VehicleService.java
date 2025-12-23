@@ -3,11 +3,15 @@ package org.unibl.etf.vehicle;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.unibl.etf.exceptions.InternalServerError;
 import org.unibl.etf.exceptions.NotFoundException;
 
 public class VehicleService {
+	private static final Logger LOGGER = Logger.getLogger(VehicleService.class.getName());
+	
 	private final VehicleDAO vehicleDAO;
 	
 	public VehicleService() {
@@ -17,8 +21,8 @@ public class VehicleService {
 	public ArrayList<VehicleEntity> getAll() throws InternalServerError {
 		try {
 			return vehicleDAO.findAll();
-			
 		} catch(FileNotFoundException e) {
+			LOGGER.log(Level.SEVERE, "Vehicle file not found", e);
 			throw new InternalServerError();
 		}
 	}
@@ -26,10 +30,13 @@ public class VehicleService {
 	public VehicleEntity getById(String id) throws InternalServerError, NotFoundException {
 		try {
 			Optional<VehicleEntity> vehicleOptional = vehicleDAO.findById(id);
-			if(vehicleOptional.isEmpty())
-				throw new NotFoundException("NOT FOUND - Client with id " + id + " not found!");	//ubaciti log!!
+			if(vehicleOptional.isEmpty()) {
+				LOGGER.log(Level.SEVERE, "Not found client with id " + id);
+				throw new NotFoundException("NOT FOUND - Client with id " + id + " not found!");
+			}
 			return vehicleOptional.get();
 		} catch(FileNotFoundException e) {
+			LOGGER.log(Level.SEVERE, "Vehicle file not found", e);
 			throw new InternalServerError();
 		}
 	}
@@ -38,7 +45,7 @@ public class VehicleService {
 		try {
 			return vehicleDAO.save(request);
 		} catch(FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Vehicle file not found", e);
 			throw new InternalServerError();
 		}
 	}
@@ -49,9 +56,10 @@ public class VehicleService {
 			if(entity.isEmpty())
 				throw new NotFoundException("NOT FOUND - Vehicle with id " + id + " not found!");
 			vehicleDAO.update(id, vehicle);
+			LOGGER.info("Updated vehicle " + id);
 			return vehicle;
 		} catch(FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Vehicle file not found", e);
 			throw new InternalServerError();
 		}
 	}
@@ -59,9 +67,10 @@ public class VehicleService {
 	public void delete(String id) throws InternalServerError, NotFoundException {
 		try {
 			vehicleDAO.deleteById(id);
+			LOGGER.info("Deleted vehicle " + id);
 		}
 		catch(FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Vehicle file not found", e);
 			throw new InternalServerError();
 		}
 		

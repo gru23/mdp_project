@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.unibl.etf.articles.Article;
@@ -20,6 +22,7 @@ import org.unibl.etf.rmi.server.BookkeepingInterface;
 import org.unibl.etf.server.articles.ArticleService;
 import org.unibl.etf.server.articles.OrderingArticle;
 import org.unibl.etf.utils.AppSession;
+import org.unibl.etf.utils.Config;
 import org.unibl.etf.utils.ConnectionFactoryUtil;
 
 import com.google.gson.Gson;
@@ -32,6 +35,8 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
 public class OrderClient {
+	private static final Logger LOGGER = Logger.getLogger(OrderClient.class.getName());
+	
 	private Socket socket;
 	private BufferedReader in;
 	private PrintWriter out;
@@ -46,7 +51,7 @@ public class OrderClient {
 	
 	public OrderClient(String supplierName) {
 		try {
-			this.socket = new Socket("localhost", 9000);
+			this.socket = new Socket(Config.get("order.client.host"), Config.getInt("order.client.port"));
 			this.gson = new Gson();
 			this.supplierName = supplierName;
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -90,12 +95,12 @@ public class OrderClient {
 					byte[] body) throws IOException {
 				
 				String json = new String(body, "UTF-8");
-	            System.out.println("📥 MQ primljena poruka: " + json);
+				LOGGER.info("MQ primljena poruka: " + json);
 
 	            MessageOrder messageOrder = gson.fromJson(json, MessageOrder.class);
 				
 				handleMessageOrder(messageOrder);
-				System.out.println("Message received: '" + messageOrder + "'");
+				LOGGER.info("Message received: '" + messageOrder + "'");
 			}
 		};
 		try {
@@ -108,7 +113,6 @@ public class OrderClient {
     public void updateOrder(String orderMessageJson) {
     	sendBill(orderMessageJson);
     	out.println(orderMessageJson);
-    	System.out.println("Narudzba otisla iz OrderClient -> SupplierHandler");
     }
     
     private void sendBill(String orderMessageJson) {
@@ -159,7 +163,7 @@ public class OrderClient {
             }
         } catch (Exception e) {
         	e.printStackTrace();
-            System.out.println("Veza sa servisom prekinuta.");
+        	LOGGER.log(Level.SEVERE, "Veza sa servisom prekinuta.", e);
         }
     }
 
@@ -173,15 +177,8 @@ public class OrderClient {
     
     private void handleMessageOrder(MessageOrder msg) {
     	if(MessageType.ORDER_REQUEST == msg.getType()) {
-    		System.out.println("Primljena narudžba, metoda handleMessageOrder");
-//    		sendOrderAck(msg);
     		AppSession.getInstance().getSupplierServer().broadcastOrder(msg);
-    		System.out.println("A OVO?!");
     	}
-    }
-
-    private void sendOrderAck(MessageOrder msg) {
-        msg.setType(MessageType.ORDER_ACK);
     }
     
     private ArrayList<OrderingArticle> convertArticleToOrderingArticle(ArrayList<Article> articles) {

@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.unibl.etf.articles.Article;
 import org.unibl.etf.server.articles.ArticleService;
@@ -17,6 +18,8 @@ import org.unibl.etf.utils.AppSession;
 import com.google.gson.Gson;
 
 public class SupplierServer extends Thread {
+	private static final Logger LOGGER = Logger.getLogger(SupplierServer.class.getName());
+	
 	private final ArticleService articleService;
 	
 	private ServerSocket serverSocket;
@@ -33,22 +36,20 @@ public class SupplierServer extends Thread {
     }
 	
 	public void broadcastOrder(MessageOrder order) {
-	    Gson gson = new Gson();
-	    out.println(gson.toJson(order));
-	    System.out.println("A OVO 2?");
+	    out.println("ORDER_REQUEST|" + new Gson().toJson(order));
 	}
 	
 	@Override
 	public void run() {
 		try {
 			Socket clientSocket = serverSocket.accept();
-			System.out.println("Supplier client connected");
+			LOGGER.info("Supplier client connected");
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream())), true);
 			
 			String line;
 			Gson gson = new Gson();
-			System.out.println("Server pokrenut i ceka");
+			LOGGER.info("Server started");
 			while((line = in.readLine()) != null) {
 				if(line.startsWith("ADD_ARTICLE")) {
 					String[] split = line.split("\\|", 2);
@@ -62,10 +63,10 @@ public class SupplierServer extends Thread {
 					//notifies service server about articles update
 					AppSession.getInstance().getOrderClient().addNewItem();
 					//answers to SupplierClient
-					out.println("OK|" + gson.toJson(updatedArticles));
+					out.println("ADD_ARTICLE|" + gson.toJson(updatedArticles));
 				}
 				else if(line.startsWith("GET_ALL")) {
-					out.println("OK|" + gson.toJson(articleService.getAllArticles()));
+					out.println("GET_ALL|" + gson.toJson(articleService.getAllArticles()));
 				}
 				else if(line.startsWith("ORDER_UPDATE")) {
 					String[] split = line.split("\\|", 2);

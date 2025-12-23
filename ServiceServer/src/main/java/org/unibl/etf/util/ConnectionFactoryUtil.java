@@ -10,9 +10,9 @@ public class ConnectionFactoryUtil {
 
 	public static Connection createConnection() throws IOException, TimeoutException {
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("localhost");
-		factory.setUsername("guest");
-		factory.setPassword("guest" );
+		factory.setHost(Config.get("connection.factory.host"));
+		factory.setUsername(Config.get("connection.factory.username"));
+		factory.setPassword(Config.get("connection.factory.password"));
 		return factory.newConnection();
 	}
 }

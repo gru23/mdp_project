@@ -24,6 +24,7 @@ import chat.GroupChatSender;
 import chat.UnicastChatSender;
 import models.dto.ClientMessage;
 import utils.AppSession;
+import utils.Config;
 
 public class ChatPanel extends JPanel {
 	private static final long serialVersionUID = -3594048662277078127L;
@@ -109,8 +110,8 @@ public class ChatPanel extends JPanel {
 				messagesHistory.put(username, "");
 			JLabel usernameLb = new JLabel(username);
 			usersLabel.add(usernameLb);
-			if("MDP Servicer".equals(username))
-				messagesHistory.put(username, "MDP Servicer: We are at your service :)");
+			if(Config.get("servicer.name").equals(username))
+				messagesHistory.put(username, Config.get("servicer.name") + ": We are at your service :)");
 			if("All users".equals(username)) {
 				usernameLb.setForeground(Color.BLUE);
 				usernameLb.setText("<html><u>" + username + "<u><html>");
@@ -120,7 +121,6 @@ public class ChatPanel extends JPanel {
 			usernameLb.addMouseListener(new MouseAdapter() {
 	            @Override
 	            public void mouseClicked(MouseEvent e) {
-	            	System.out.println("klik " + username);
 	            	if(selectedUser != null)
 	            		unselectCurrentUser();
 	            	selectedUser = usernameLb; 
@@ -132,9 +132,6 @@ public class ChatPanel extends JPanel {
 			usersPanel.add(Box.createVerticalStrut(5));
 			usersPanel.add(usernameLb);
 		}
-		System.out.println("EVO ISPISA messagesHistory");
-		messagesHistory.keySet().forEach(System.out::println);
-		messagesHistory.values().forEach(System.out::println);
 		return usersPanel;		
 	}
 	

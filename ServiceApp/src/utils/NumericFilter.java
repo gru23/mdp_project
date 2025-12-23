@@ -31,7 +31,6 @@ public class NumericFilter extends DocumentFilter {
     private boolean isValid(String text, String currentText) {
         if (text == null) return false;
 
-        // ALLOW EMPTY (CLEAR)
         if (text.isEmpty()) return true;
 
         if (!allowDecimal) {

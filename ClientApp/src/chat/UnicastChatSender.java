@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class UnicastChatSender {
+	private static final Logger LOGGER = Logger.getLogger(UnicastChatSender.class.getName());
+	
     private String username;
     
     private PrintWriter out;
@@ -15,8 +18,6 @@ public class UnicastChatSender {
         this.username = username;
 		try {
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-//			out.println(username);
-			System.out.println("posl'o username: " + username);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -30,6 +31,7 @@ public class UnicastChatSender {
     public void send(String message, String receiver) {
 			String formattedMessage = username + "#" + receiver + "#" + message;
 			out.println(formattedMessage);
+			LOGGER.info(String.format("%s texted %s", username, receiver));
 			System.out.println("posl'o poruku: " + formattedMessage);
     }
 }

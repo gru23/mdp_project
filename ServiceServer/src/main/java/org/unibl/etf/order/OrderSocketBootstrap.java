@@ -1,11 +1,15 @@
 package org.unibl.etf.order;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 @WebListener
 public class OrderSocketBootstrap implements ServletContextListener {
+	private static final Logger LOGGER = Logger.getLogger(OrderSocketBootstrap.class.getName());
 
     private OrderServer orderServer;
     private Thread serverThread;
@@ -19,14 +23,14 @@ public class OrderSocketBootstrap implements ServletContextListener {
                     orderServer.start();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "", e);
                 }
             });
             serverThread.start();
 
             // dostupno REST-u
             sce.getServletContext().setAttribute("orderServer", orderServer);
-
-            System.out.println("Order socket server pokrenut.");
+            LOGGER.info("Order socket server stopped");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,7 +38,6 @@ public class OrderSocketBootstrap implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        System.out.println("Gašenje socket servera...");
-        // opciono: graceful shutdown
+    	LOGGER.info("Turning down order socket server");
     }
 }

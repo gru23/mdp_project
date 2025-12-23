@@ -34,7 +34,7 @@ public class SignInWindow extends JFrame {
 	
 	
 	public SignInWindow() {
-		super("MDP Servicer");
+		super("Sign in");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setSize(300, 200);
 	    setLocationRelativeTo(null);

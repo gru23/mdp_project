@@ -11,9 +11,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -25,6 +25,7 @@ import chat.GroupChatReceiver;
 import chat.UnicastChatReceiver;
 import chat.UnicastChatSender;
 import enums.Screen;
+import utils.Config;
 
 
 public class MainWindow extends JFrame {
@@ -51,14 +52,21 @@ public class MainWindow extends JFrame {
 	private static final String sparePartsLinkName = "Spare Parts ";
 	private static final String ordersLinkName = "Orders ";
 	
+	private static final String HOST = Config.get("chat.unicast.host");
+	private static final int PORT = Config.getInt("chat.unicast.port");
+	private static final String KEY_STORE_PATH = Config.get("keystore.path");
+	private static final String KEY_STORE_PASSWORD = Config.get("keystore.password");
 	
 	public MainWindow() {
 		setLayout(new BorderLayout());
 		
 		try {
-			InetAddress addr = InetAddress.getByName("127.0.0.1");
-	        Socket sock = new Socket(addr, 15000);//new Socket(addr, TCP_PORT);
-	        
+			System.setProperty("javax.net.ssl.trustStore", KEY_STORE_PATH);
+			System.setProperty("javax.net.ssl.trustStorePassword", KEY_STORE_PASSWORD);
+
+			SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
+			
+			SSLSocket sock = (SSLSocket) sf.createSocket(HOST, PORT);
 
 			PrintWriter out = new PrintWriter(
 			    new BufferedWriter(
@@ -67,15 +75,15 @@ public class MainWindow extends JFrame {
 			);
 			
 			// HANDSHAKE – SAMO JEDNOM
-			out.println("MDP Servicer");
+			out.println(Config.get("servicer.name"));
 	        
 	        UnicastChatReceiver ucr = new UnicastChatReceiver(sock);
-			GroupChatReceiver gcr = new GroupChatReceiver("MDP Servicer");
+			GroupChatReceiver gcr = new GroupChatReceiver(Config.get("servicer.name"));
 			
-			setTitle("MDP Servicer");
+			setTitle(Config.get("servicer.name"));
 			
 			clientsPanel = new ClientsPanel();
-			chatPanel = new ChatPanel(initializeUnicastSender());
+			chatPanel = new ChatPanel(initializeUnicastSender(sock));
 			appointmentsPanel = new AppointmentsPanel();
 			sparePartsPanel = new SparePartsPanel();
 			ordersPanel = new OrdersPanel();
@@ -154,19 +162,8 @@ public class MainWindow extends JFrame {
 		underlineSelectedLink(Screen.CLIENTS);
 	}
 	
-	private UnicastChatSender initializeUnicastSender() {
-	    final int TCP_PORT = 15000;
-	    UnicastChatSender sender = null;
-
-	    try {
-	        InetAddress addr = InetAddress.getByName("127.0.0.1");
-	        Socket sock = new Socket(addr, TCP_PORT);
-	        sender = new UnicastChatSender(sock, "MDP Servicer");
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-
-	    return sender;
+	private UnicastChatSender initializeUnicastSender(SSLSocket sock) {
+	    return new UnicastChatSender(sock, Config.get("servicer.name"));
 	}
 	
 	private void attachClientsAction() {

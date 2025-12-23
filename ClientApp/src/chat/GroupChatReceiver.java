@@ -6,16 +6,19 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Arrays;
-import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import models.dto.ClientMessage;
 import utils.AppSession;
+import utils.Config;
 import utils.KryoSerialization;
 
 public class GroupChatReceiver extends Thread {
+	private static final Logger LOGGER = Logger.getLogger(GroupChatSender.class.getName());
 
-    private static final int PORT = 20000;
-    private static final String HOST = "224.0.0.11";
+    private static final int PORT = Config.getInt("chat.group.port");
+    private static final String HOST = Config.get("chat.group.host");
 
     private String name;
     
@@ -43,7 +46,7 @@ public class GroupChatReceiver extends Thread {
                 
                 String packetString = KryoSerialization.deserialize(data).toString();
                 if(packetString.startsWith("NEW_CUPCAKE#")) {
-                	System.out.println("Novi kolacic " + packetString);
+                	LOGGER.info("New cupcake " + packetString);
                 	sendAcknowledgement();
                 }
                 else if(packetString.startsWith("OLD_CUPCAKE#")) {
@@ -51,15 +54,12 @@ public class GroupChatReceiver extends Thread {
                 	if(newClientUsername.equals(name))
                 		continue;
                 	AppSession.getInstance().addOnlineClient(newClientUsername);
-                	Set<String> sqw = AppSession.getInstance().getOnlineClients();
-                	sqw.forEach(System.out::println);
-                	System.out.println("Stari kolacic " + packetString);
+                	LOGGER.info("Old cupcake " + packetString);
                 }
                 else {
                 	clientMessage = (ClientMessage) KryoSerialization.deserialize(data);
                     if(clientMessage.getUsername().equals(name))
                     	continue;
-                    System.out.println(formattedMessage(clientMessage));
                     AppSession.getInstance()
                     	.getChatPanel()
                     	.receiveNewMessage(clientMessage.getUsername(), formattedMessage(clientMessage), true);
@@ -67,7 +67,7 @@ public class GroupChatReceiver extends Thread {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "I/O Exception in group chat receiver for " + name);
         }
     }
     
@@ -86,7 +86,7 @@ public class GroupChatReceiver extends Thread {
             socket.send(introductionPacket);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "I/O Exception during acknowledging new client.");
             }
     }
 }

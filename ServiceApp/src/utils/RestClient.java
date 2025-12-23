@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 import exceptions.ServerError;
 
 public class RestClient {
-	public static final String BASE_URL = "http://localhost:8080/ServiceServer/api/";
+	public static final String BASE_URL = Config.get("rest.base.url");
 	
 	private static final Gson gson = new Gson();
 	

@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.unibl.etf.appointment.enums.AppointmentStatus;
+import org.unibl.etf.chats.ClientHandler;
 import org.unibl.etf.client.Client;
 import org.unibl.etf.client.ClientDAO;
 import org.unibl.etf.exceptions.AppointmentConflictException;
@@ -24,6 +27,8 @@ import org.unibl.etf.vehicle.VehicleEntity;
 
 
 public class AppointmentService {
+	private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
+	
 	private final AppointmentDAO appointmentDAO;
 	private final ClientDAO clientDAO;
 	private final VehicleDAO vehicleDAO;
@@ -40,6 +45,7 @@ public class AppointmentService {
 	
 	public ArrayList<AppointmentEntity> getAll() throws InternalServerError {
 		try {
+			LOGGER.info("Fetching all appointments");
 			return appointmentDAO
 					.findAll()
 					.stream()
@@ -47,7 +53,6 @@ public class AppointmentService {
 	                        .comparing(AppointmentEntity::getDate)
 	                        .thenComparing(AppointmentEntity::getTime))
 	                .collect(Collectors.toCollection(ArrayList::new));
-			
 		} catch(FileNotFoundException e) {
 			throw new InternalServerError();
 		}
@@ -55,6 +60,7 @@ public class AppointmentService {
 	
 	public ArrayList<AppointmentEntity> getAllByStatus(String status) throws InternalServerError {
 		try {
+			LOGGER.info("Fetching all appointments by status " + status);
 			return appointmentDAO
 					.findAllByStatus(AppointmentStatus.valueOf(status.toUpperCase()))
 					.stream()
@@ -70,6 +76,7 @@ public class AppointmentService {
 	
 	public ArrayList<AppointmentEntity> getAllByClientId(String clientId) throws InternalServerError {
 		try {
+			LOGGER.info("Fetching all appointments by client's id " + clientId);
 			return appointmentDAO
 					.findAllByClientId(clientId)
 					.stream()
@@ -87,7 +94,8 @@ public class AppointmentService {
 			Optional<AppointmentEntity> appointmentOptional = appointmentDAO.findById(id);
 			if(appointmentOptional.isEmpty())
 				throw new NotFoundException("NOT FOUND - Appointment with id " 
-						+ id + " not found!");	//ubaciti log!!
+						+ id + " not found!");
+			LOGGER.info("Fetching appointment by id " + id);
 			return appointmentOptional.get();
 		} catch(FileNotFoundException e) {
 			throw new InternalServerError();
@@ -110,7 +118,7 @@ public class AppointmentService {
 	        }
 			return appointmentDAO.save(new AppointmentEntity(request));
 		} catch(FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Appointment file not found", e);
 			throw new InternalServerError();
 		}
 	}
@@ -124,7 +132,7 @@ public class AppointmentService {
 				emailInvoice(updatedAppointment);
 			return appointmentDAO.update(id, updatedAppointment);
 		} catch(FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Appointment file not found", e);
 			throw new InternalServerError();
 		}
 	}
@@ -134,7 +142,7 @@ public class AppointmentService {
 			appointmentDAO.deleteById(id);
 		}
 		catch(FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Appointment file not found", e);
 			throw new InternalServerError();
 		}
 	}
@@ -155,7 +163,7 @@ public class AppointmentService {
 			Invoice invoice = new Invoice(parts,  updatedAppointment.getType(), client, vehicle);
 			invoiceService.writeAndEmailInvoice(invoice);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Appointment file not found", e);
 		}
 	}
 	

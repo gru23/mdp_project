@@ -2,15 +2,19 @@ package services;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import exceptions.InvalidLoginException;
 import models.Appointment;
 import models.requests.AppointmentRequest;
 import utils.AppSession;
+import utils.Config;
 import utils.JSONConversion;
 import utils.RestClient;
 
 public class ClientService {
+	private static final Logger LOGGER = Logger.getLogger(ClientService.class.getName());
+	
 	public ClientService() {
 		
 	}
@@ -19,10 +23,11 @@ public class ClientService {
 		HttpURLConnection conn = null;
 	    Appointment result = null;
 	    try {
-	        conn = RestClient.openConnection("appointments", true, "POST");
+	        conn = RestClient.openConnection(Config.get("rest.endpoint.appointments"), true, "POST");
 	        RestClient.sendRequest(conn, newAppointment);
 	        String response = RestClient.readResponse(conn);
 	        result = RestClient.convertFromJSON(response, Appointment.class);
+	        LOGGER.info(String.format("Client %s made appointment", newAppointment.getClientId()));
 	    } finally {
 	        if (conn != null) conn.disconnect();
 	    }
@@ -33,7 +38,7 @@ public class ClientService {
 		HttpURLConnection conn = null;
 		try {
 			String clientId = AppSession.getInstance().getCurrentClient().getId();
-			conn = RestClient.openConnection("appointments/clients/" + clientId, false, "GET");
+			conn = RestClient.openConnection(Config.get("rest.endpoint.appointments.clients") + clientId, false, "GET");
 			String jsonResponse = RestClient.readResponse(conn);
 			return JSONConversion.convertArrayList(jsonResponse, Appointment.class);
 		} finally {

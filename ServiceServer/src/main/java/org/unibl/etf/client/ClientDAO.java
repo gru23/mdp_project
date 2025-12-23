@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.unibl.etf.exceptions.DuplicateException;
 import org.unibl.etf.exceptions.NotFoundException;
+import org.unibl.etf.util.Config;
 import org.unibl.etf.util.XMLSerialization;
 
 public class ClientDAO {
@@ -67,14 +68,7 @@ public class ClientDAO {
     	writeAll(clients);
     }
 	
-    
-//	/C:\Users\Administrator\Desktop\MDP Project\ServiceServer\data
-	//ServiceServer/data/clients.xml
 	private ArrayList<ClientEntity> readAll() throws FileNotFoundException {
-//		return XMLSerialization.deserializeXML(System.getProperty("user.dir") + File.separator + 
-//				"data" + File.separator + "clients.xml");
-//		return XMLSerialization.deserializeXML("C:\\Users\\Administrator\\Desktop\\MDP Project\\ServiceServer\\data\\clients.xml");
-		
 		try {
 			return XMLSerialization.deserializeXML(getDataPath());
 		} catch (FileNotFoundException e) {
@@ -84,7 +78,6 @@ public class ClientDAO {
 	}
 
 	private void writeAll(ArrayList<ClientEntity> clients) throws FileNotFoundException {
-//		XMLSerialization.serializeXML(clients, "data/clients.xml");
 		try {
 			XMLSerialization.serializeXML(clients, getDataPath());
 		} catch (FileNotFoundException e) {
@@ -93,14 +86,9 @@ public class ClientDAO {
 		}
 	}
 	
-    
-	//C:\Programs\Eclipse\eclipse\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\ServiceServer\WEB-INF\data
 	private String getDataPath() {
 	    String base = System.getProperty("catalina.base");
-	    return base + File.separator + "wtpwebapps" 
-	                + File.separator + "ServiceServer" 
-	                + File.separator + "WEB-INF"
-	                + File.separator + "data"
-	                + File.separator + "clients.xml";	//ovo clients.xml preko propertie dohvatit
+	    return base + File.separator + Config.get("file.root.path")
+	                + File.separator + Config.get("file.name.clients");
 	}
 }

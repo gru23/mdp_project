@@ -20,25 +20,14 @@ import org.unibl.etf.suppliers.Supplier;
 
 @Path("/suppliers")
 public class SupplierAPIService {
-//	private final SupplierService service;
-	private final OrderService orderService;
 	
-	public SupplierAPIService() {
-//		this.service = new SupplierService();
-		this.orderService = new OrderService(); 
+	public SupplierAPIService() { 
 	}
 	
 	@GET
 	public Collection<Supplier> getSuppliers(@Context ServletContext ctx) {
 	    return OrderServer.suppliers.values();
 	}
-
-	
-//	@GET
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response getAll() {
-//		return Response.ok(service.getAll()).build();
-//	}
 	
 	@GET
 	@Path("/orders")
@@ -48,7 +37,6 @@ public class SupplierAPIService {
 	    return Response.ok(orders).build();
 	}
 
-	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -61,11 +49,4 @@ public class SupplierAPIService {
 	            .entity(orderService.sendOrder(order))
 	            .build();
 	}
-//	public Response sendOrder(Order order) {
-//		return Response
-//				.status(Response.Status.CREATED)
-//				.entity(orderService.sendOrder(order))
-//				.build();
-//	}
-
 }

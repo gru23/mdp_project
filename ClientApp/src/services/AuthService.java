@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 import chat.GroupChatReceiver;
 import chat.GroupChatSender;
@@ -20,25 +23,33 @@ import models.dto.Registration;
 import models.requests.ClientRequest;
 import models.requests.LoginRequest;
 import utils.AppSession;
+import utils.Config;
 import utils.RestClient;
 
 public class AuthService {
-	public static final int TCP_PORT = 15000;
+	private static final Logger LOGGER = Logger.getLogger(AuthService.class.getName());
+	
+	private static final String HOST = Config.get("chat.unicast.host");
+	private static final int PORT = Config.getInt("chat.unicast.port");
+	private static final String KEY_STORE_PATH = Config.get("keystore.path");
+	private static final String KEY_STORE_PASSWORD = Config.get("keystore.password");
 	
 	public AuthService() {
 		
 	}
 	
 	public Client login(String username, String password) throws InvalidLoginException {
+		LOGGER.info("Login attempt by client: " + username);
 		LoginRequest request = new LoginRequest(username, password);
 	    HttpURLConnection conn = null;
 	    Client result = null;
 	    try {
-	        conn = RestClient.openConnection("auth/login", true, "POST");
+	        conn = RestClient.openConnection(Config.get("rest.endpoint.login"), true, "POST");
 	        RestClient.sendRequest(conn, request);
 	        String response = RestClient.readResponse(conn);
 	        result = RestClient.convertFromJSON(response, Client.class);
 	        AppSession.getInstance().setCurrentClient(result);
+	        LOGGER.info("Succesuful login: " + username);
 	        
 	        //multicast
 	        GroupChatReceiver rt = new GroupChatReceiver(username);
@@ -48,8 +59,12 @@ public class AuthService {
 	        AppSession.getInstance().setGroupChatSender(st);
 	        
 	        //unicast
-	        InetAddress addr = InetAddress.getByName("127.0.0.1");
-            Socket sock = new Socket(addr, TCP_PORT);
+	        System.setProperty("javax.net.ssl.trustStore", KEY_STORE_PATH);
+			System.setProperty("javax.net.ssl.trustStorePassword", KEY_STORE_PASSWORD);
+
+			SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
+			
+	        SSLSocket sock = (SSLSocket) sf.createSocket(HOST, PORT);
             
             PrintWriter out = new PrintWriter(
             	    new BufferedWriter(
@@ -67,9 +82,9 @@ public class AuthService {
 	        AppSession.getInstance().setUnicastChatSender(ucs);
 	        
 	    } catch (UnknownHostException e) {
-			e.printStackTrace();
+	    	LOGGER.log(Level.SEVERE, "Unknown host for unicast chat. Host: " + HOST, e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "I/O Exception during loging client: " + username, e);
 		} finally {
 	        if (conn != null) conn.disconnect();
 	    }
@@ -77,15 +92,17 @@ public class AuthService {
 	}
 	
 	public Client registration(ClientRequest request, Vehicle vehicle) throws InvalidLoginException {
+		LOGGER.info("Registration attempt for client: " + request.getUsername());
 		HttpURLConnection conn = null;
 	    Client result = null;
 	    Registration registrationRequest = new Registration(request, vehicle);
 	    try {
-	        conn = RestClient.openConnection("auth/registration", true, "POST");
+	        conn = RestClient.openConnection(Config.get("rest.endpoint.registration"), true, "POST");
 	        RestClient.sendRequest(conn, registrationRequest);
 	        String response = RestClient.readResponse(conn);
 	        result = RestClient.convertFromJSON(response, Client.class);
 	        AppSession.getInstance().setCurrentClient(result);
+	        LOGGER.info("Succesuful registration: " + request.getUsername());
 	    } finally {
 	        if (conn != null) conn.disconnect();
 	    }

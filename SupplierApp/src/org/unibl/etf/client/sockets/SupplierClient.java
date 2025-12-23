@@ -9,10 +9,13 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
 import org.unibl.etf.articles.Article;
+import org.unibl.etf.client.gui.ArticlesPanel;
 import org.unibl.etf.client.gui.OrdersPanel;
 import org.unibl.etf.orders.Order;
 import org.unibl.etf.server.sockets.MessageOrder;
@@ -25,6 +28,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 public class SupplierClient {
+	private static final Logger LOGGER = Logger.getLogger(SupplierClient.class.getName());
 	
 	private PrintWriter out;
 	private BufferedReader in;
@@ -32,6 +36,7 @@ public class SupplierClient {
 	private Gson gson;
 	
 	private OrdersPanel ordersPanel;
+	private ArticlesPanel articlesPanel;
 
 	
 	public SupplierClient(Socket socket) {
@@ -39,10 +44,8 @@ public class SupplierClient {
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			gson = new Gson();
-			
-//			new Thread(this::listen).start();	//OVO NE OTVARA GUI!
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "I/O Exception in SupilerClient", e);
 		}
 	}
 	
@@ -50,48 +53,12 @@ public class SupplierClient {
 	    new Thread(this::listen, "SupplierClient-listener").start();
 	}
 	
-	public ArrayList<Article> getAllArticles() {
-	    ArrayList<Article> articles = new ArrayList<>();
-
-	    try {
-	        out.println("GET_ALL");
-	        String line = in.readLine();
-
-	        if (line != null && line.startsWith("OK")) {
-	            String jsonString = line.split("\\|", 2)[1];
-
-	            Type listType = new TypeToken<ArrayList<Article>>() {}.getType();
-	            articles = gson.fromJson(jsonString, listType);
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-
-	    return articles;
+	public void getAllArticles() {
+		out.println("GET_ALL");
 	}
 
-	public ArrayList<Article> addArticle(Article newArticle) {
-		ArrayList<Article> articles = new ArrayList<>();
-
-	    try {
-	    	String articleJSON = gson.toJson(newArticle);
-	        out.println("ADD_ARTICLE|" + articleJSON);
-	        String line = in.readLine();
-
-	        if (line != null && line.startsWith("OK")) {
-	            String jsonString = line.split("\\|", 2)[1];
-
-	            Type listType = new TypeToken<ArrayList<Article>>() {}.getType();
-	            articles = gson.fromJson(jsonString, listType);
-	        }
-	        else if (line.startsWith("ERROR")) {
-	            System.err.println("Server error: " + line);
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-
-	    return articles;
+	public void addArticle(Article newArticle) {
+		out.println("ADD_ARTICLE|" + gson.toJson(newArticle));
 	}
 	
 	public void updateOrder(Order order) {
@@ -101,7 +68,6 @@ public class SupplierClient {
 				order
 		);
 		out.println("ORDER_UPDATE|" + gson.toJson(messageOrder));
-		
 	}
 	
 	private void listen() {
@@ -109,40 +75,48 @@ public class SupplierClient {
             String line;
             while ((line = in.readLine()) != null) {
                 System.out.println("Supplier GUI primio: " + line);
-
-                JsonParser parser = new JsonParser();
-                JsonObject root = parser.parse(line).getAsJsonObject();
-
-                MessageType type = MessageType.valueOf(root.get("type").getAsString());
-
-                if (type == MessageType.ORDER_REQUEST) {
-                    MessageOrder order = gson.fromJson(root, MessageOrder.class);
-                    handleOrder(order);
+                String[] parts = line.split("\\|", 2);
+            	if (parts.length != 2) {
+            	    continue;
+            	}
+                if(line.startsWith("GET_ALL") || line.startsWith("ADD_ARTICLE")) {
+                	String json = parts[1];
+                	Type listType = new TypeToken<ArrayList<Article>>() {}.getType();
+                	ArrayList<Article> articles = gson.fromJson(json, listType);
+                	articlesPanel.setAllArticles(articles);
+                }
+                else if(line.startsWith("ORDER_REQUEST")) {
+	                JsonParser parser = new JsonParser();
+	                JsonObject root = parser.parse(parts[1]).getAsJsonObject();
+	
+	                MessageType type = MessageType.valueOf(root.get("type").getAsString());
+	
+	                if (type == MessageType.ORDER_REQUEST) {
+	                    MessageOrder order = gson.fromJson(root, MessageOrder.class);
+	                    handleOrder(order);
+	                }
                 }
             }
         } catch (Exception e) {
-            System.out.println("Veza prekinuta");
+        	LOGGER.log(Level.SEVERE, "Connection interrupted", e);
         }
     }
 
     private void handleOrder(MessageOrder order) {
-        System.out.println("🔥 NOVA NARUDŽBA:");
-        System.out.println(order);
+    	LOGGER.info("New order income");
         Order temp = order.getPayload();
         Order newOrder = new Order(temp.getId(), order.getSupplierName(), 
         		temp.getDate(), temp.getStatus(), temp.getArticles());
-//        ordersPanel.addOrder(newOrder);
-        System.out.println("UDJE LI?");
         SwingUtilities.invokeLater(() -> {
-        	System.out.println("EVO OVDJE");
             ordersPanel.addOrder(newOrder);
         });
-        // OVDJE:
-        // - dodaj u GUI tabelu
-        // - red čekanja
     }
     
     public void setOrdersPanel(OrdersPanel ordersPanel) {
     	this.ordersPanel = ordersPanel;
+    }
+    
+    public void setArticlesPanel(ArticlesPanel articlesPanel) {
+    	this.articlesPanel = articlesPanel;
     }
 }

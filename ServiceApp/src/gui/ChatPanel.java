@@ -123,9 +123,6 @@ public class ChatPanel extends JPanel {
 			usersPanel.add(Box.createVerticalStrut(5));
 			usersPanel.add(usernameLb);
 		}
-		System.out.println("EVO ISPISA messagesHistory");
-		messagesHistory.keySet().forEach(System.out::println);
-		messagesHistory.values().forEach(System.out::println);
 		return usersPanel;		
 	}
 	

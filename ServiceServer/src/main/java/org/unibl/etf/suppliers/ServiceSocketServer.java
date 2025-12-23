@@ -5,8 +5,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 public class ServiceSocketServer {
+	private static final Logger LOGGER = Logger.getLogger(ServiceSocketServer.class.getName());
 
     private int port;
     private ServerSocket serverSocket;
@@ -19,11 +21,11 @@ public class ServiceSocketServer {
     public void start() {
         try {
             serverSocket = new ServerSocket(port);
-            System.out.println("[SERVIS] Server pokrenut na portu: " + port);
+            LOGGER.info("[SERVIS] Service server started on port: " + port);
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("[SERVIS] Dobavljač se povezao...");
+                LOGGER.info("[SERVIS] Supplier connected...");
 
                 SupplierHandlerThread handler = new SupplierHandlerThread(clientSocket, this);
                 handler.start();
@@ -36,36 +38,34 @@ public class ServiceSocketServer {
 
     public void registerSupplier(String name, SupplierHandlerThread handler) {
         suppliers.put(name, handler);
-        System.out.println("[SERVIS] Dobavljač registrovan: " + name);
+        LOGGER.info("[SERVIS] Supplier registred: " + name);
     }
 
     public void unregisterSupplier(String name) {
         suppliers.remove(name);
-        System.out.println("[SERVIS] Dobavljač isključen: " + name);
+        LOGGER.info("[SERVIS] Supplier unregistred: " + name);
     }
 
     public Map<String, SupplierHandlerThread> getSuppliers() {
         return suppliers;
     }
 
-    // Serviser ručno traži artikle
     public String requestItemsFrom(String supplierName) throws IOException {
         SupplierHandlerThread handler = suppliers.get(supplierName);
         if (handler == null) return null;
 
         handler.sendMessage("GET_ITEMS");
 
-        return handler.waitForResponse(); // blokira dok ne primi ITEMS paket
+        return handler.waitForResponse();
     }
 
-    // Serviser naručuje artikle
     public String orderPart(String supplierName, String code, int qty) throws IOException {
         SupplierHandlerThread handler = suppliers.get(supplierName);
         if (handler == null) return null;
 
         handler.sendMessage("ORDER|" + code + "|" + qty);
 
-        return handler.waitForResponse(); // čeka odgovor ORDER_OK ili ORDER_ERROR
+        return handler.waitForResponse();
     }
 
     public static void main(String[] args) {

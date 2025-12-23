@@ -6,8 +6,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientHandler extends Thread {
+	private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
+	
 	private Socket sock;
 	private BufferedReader in;
 	private PrintWriter out;
@@ -19,7 +23,7 @@ public class ClientHandler extends Thread {
 			in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(sock.getOutputStream())), true);
 		} catch(Exception e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Error while making client handler", e);
 		}
 		start();
 	}
@@ -36,7 +40,7 @@ public class ClientHandler extends Thread {
                 // Format: sender#receiver#message
                 String[] parts = line.split("#", 3);
                 if (parts.length != 3) {
-                    System.out.println("Invalid message format from " + username + ": " + line);
+                	LOGGER.log(Level.WARNING, "Invalid message format from " + username + ": " + line);
                     continue;
                 }
 
@@ -48,7 +52,7 @@ public class ClientHandler extends Thread {
             }
 
         } catch (Exception e) {
-            System.out.println("Client disconnected: " + username);
+        	LOGGER.log(Level.SEVERE, "Client disconnected: " + username, e);
         }
         finally {
             ChatServer.removeClient(username);

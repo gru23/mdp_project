@@ -7,15 +7,19 @@ import java.net.MulticastSocket;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import gui.ChatPanel;
+import utils.Config;
 import utils.KryoSerialization;
 
 public class GroupChatReceiver extends Thread {
+	private static final Logger LOGGER = Logger.getLogger(GroupChatReceiver.class.getName());
 	public static Set<String> onlineClients;
 
-    private static final int PORT = 20000;
-    private static final String HOST = "224.0.0.11";
+    private static final int PORT = Config.getInt("chat.group.port");
+    private static final String HOST = Config.get("chat.group.host");
 
     private ChatPanel chatPanel;
     
@@ -48,7 +52,7 @@ public class GroupChatReceiver extends Thread {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "I/O Exception in group chat", e);
         }
     }
     

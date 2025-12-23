@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UnicastChatSender {
+	private static final Logger LOGGER = Logger.getLogger(UnicastChatSender.class.getName());
+	
     private String username;
     
     private PrintWriter out;
@@ -14,13 +18,10 @@ public class UnicastChatSender {
     public UnicastChatSender(Socket socket, String username) {
         this.username = username;
 		try {
-			System.out.println("UCS KRENO");
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-			//out.println(username);
-			System.out.println("posl'o username: " + username);
-			System.out.println("UCS ZAVRSIO");
+			LOGGER.info("Servicer sent handshake.");
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "I/O Exception during instancing unicast chat for " + username, e);
 		}
     }
     
@@ -30,10 +31,8 @@ public class UnicastChatSender {
      * @param receiver username of user which will receive this message
      */
     public void send(String message, String receiver) {
-    	System.out.println("UCS KRENO");
-			String formattedMessage = username + "#" + receiver + "#" + message;
-			out.println(formattedMessage);
-			System.out.println("posl'o poruku: " + formattedMessage);
-			System.out.println("UCS POSLO");
+		String formattedMessage = username + "#" + receiver + "#" + message;
+		out.println(formattedMessage);
+		LOGGER.info("Servicer sent message.");
     }
 }

@@ -11,6 +11,7 @@ import org.unibl.etf.rmi.client.BookkeepingClient;
 import org.unibl.etf.rmi.server.BookkeepingInterface;
 import org.unibl.etf.server.sockets.SupplierServer;
 import org.unibl.etf.utils.AppSession;
+import org.unibl.etf.utils.Config;
 import org.unibl.etf.utils.RemoteReferenceReader;
 
 public class SupplierAppMain {
@@ -23,7 +24,7 @@ public class SupplierAppMain {
 			AppSession.getInstance().setSupplierServer(server);
 			
 			int port = server.getPort();
-			Socket clientSocket = new Socket("127.0.0.1", port);
+			Socket clientSocket = new Socket(Config.get("localhost"), port);
 			SupplierClient supplierClient = new SupplierClient(clientSocket);
 //			new MainWindow(supplierClient);
 			

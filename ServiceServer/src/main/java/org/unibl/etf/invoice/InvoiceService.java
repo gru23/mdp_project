@@ -7,15 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.unibl.etf.util.Config;
 import org.unibl.etf.util.EmailSender;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class InvoiceService {
+	private static final Logger LOGGER = Logger.getLogger(InvoiceService.class.getName());
+	
 	private Invoice invoice;
 	
 	public InvoiceService() {
@@ -44,8 +48,8 @@ public class InvoiceService {
         		zipPath
         );
 
-        System.out.println("Generated PDF: " + pdfPath);
-        System.out.println("Generated ZIP: " + zipPath);
+        LOGGER.info("Generated PDF: " + pdfPath);
+        LOGGER.info("Generated ZIP: " + zipPath);
     }	
 	
 	private void serializeInvoice(String path) {
@@ -54,7 +58,6 @@ public class InvoiceService {
 		
 		try (FileWriter writer = new FileWriter(jsonPath)) {
 	        gson.toJson(this.invoice, writer);
-	        System.out.println("Invoice serijalizovan u JSON: " + jsonPath);
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
@@ -82,10 +85,7 @@ public class InvoiceService {
 	private String getInvoicePdfPath() {
         String base = System.getProperty("catalina.base");
 
-        String dir = base + File.separator + "wtpwebapps"
-                + File.separator + "ServiceServer"
-                + File.separator + "WEB-INF"
-                + File.separator + "invoice";
+        String dir = base + File.separator + Config.get("invoice.relative.path");
 
         File f = new File(dir);
         if (!f.exists()) {

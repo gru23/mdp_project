@@ -284,6 +284,7 @@ public class SparePartsPanel extends JPanel {
 		            if (choice == JOptionPane.YES_OPTION) {
 		            	try {
 		            		partsService.deletePart(selectedPart.getCode());
+		            		cleanForm();
 							refreshTable();
 						} catch (ServerError e1) {
 							e1.printStackTrace();

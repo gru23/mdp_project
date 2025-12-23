@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.unibl.etf.exceptions.NotFoundException;
 
-public class PartService {
+public class PartService {	
 	private final PartDAO partDAO;
 	
 	public PartService() {

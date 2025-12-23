@@ -3,11 +3,14 @@ package chat;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 import models.dto.ClientMessage;
 import utils.AppSession;
 
 public class UnicastChatReceiver extends Thread {
+	private static final Logger LOGGER = Logger.getLogger(UnicastChatSender.class.getName());
+	
 	private Socket socket;
 	
 	public UnicastChatReceiver(Socket socket) {
@@ -22,15 +25,12 @@ public class UnicastChatReceiver extends Thread {
             while ((line = in.readLine()) != null) {
             	String[] split = line.split("#");
             	String username = split[0];
-            	System.out.println(username);
-            	System.out.println(line);
             	AppSession.getInstance()
             	.getChatPanel()
             	.receiveNewMessage(username, formattedMessage(new ClientMessage(username, split[2])), false);
             }
         } catch (Exception e) {
-        	e.printStackTrace();
-            System.out.println("Disconnected from server.");
+        	LOGGER.info("Disconnected from server.");
         }
 	}
 	

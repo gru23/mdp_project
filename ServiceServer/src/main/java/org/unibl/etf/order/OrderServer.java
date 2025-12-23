@@ -6,17 +6,22 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.unibl.etf.suppliers.Supplier;
+import org.unibl.etf.util.Config;
 import org.unibl.etf.util.ConnectionFactoryUtil;
 
 import com.rabbitmq.client.Connection;
 
 public class OrderServer {
+	private static final Logger LOGGER = Logger.getLogger(OrderServer.class.getName());
+	
 	public static final Map<String, Supplier> suppliers = new ConcurrentHashMap<>();
 
 	
-	private static final int PORT = 9000;
+	private static final int PORT = Config.getInt("order.server.port");
 	
 	private Map<String, SupplierHandler> suppliersHandler;
 	
@@ -35,7 +40,7 @@ public class OrderServer {
 
 	public void start() throws IOException {		
 		try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-			System.out.println("Servis sluša na portu " + PORT);
+			LOGGER.info("Service listening on port " + PORT);
 			
 			while(true) {
 				Socket socket = serverSocket.accept();
@@ -47,7 +52,7 @@ public class OrderServer {
 	
 	public void registerSupplier(String supplierName, SupplierHandler handler) {
 		suppliersHandler.put(supplierName, handler);
-		System.out.println("Registred supplier " + supplierName);
+		LOGGER.info("Registred supplier " + supplierName);
 	}
 	
 	public void unregisterSupplier(String supplierName) {
@@ -62,12 +67,12 @@ public class OrderServer {
 			handler.sendOrder(order);
 		}
 		else
-			System.out.println("Unknown supplier!");
+			LOGGER.log(Level.SEVERE, "Unknown supplier!");
 	}
 	
 	public void addSupplier(Supplier supplier) {
 		suppliers.put(supplier.getName(), supplier);
-		System.out.println("ISPIS SVIH dobavlajca " + suppliers.values().size());
+		LOGGER.info("Added supplier " + supplier.getName());
 	}
 	
 	

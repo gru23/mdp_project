@@ -1,0 +1,28 @@
+{
+  "supplierName": "Supplier 173",
+  "order": {
+    "id": "8baa4e10-6e2a-43a1-8ae0-4566f80dcc8e",
+    "supplier": "Supplier 173",
+    "date": "2025-12-23",
+    "status": "APPROVED",
+    "articles": [
+      {
+        "code": "326605",
+        "name": "Akebono EUR1003 - Disc Brake Pad Set (Front)",
+        "manufacturer": "Akebono",
+        "price": 61.0,
+        "quanity": 1
+      },
+      {
+        "code": "326606",
+        "name": "Akebono EUR1018 - Disc Brake Pad Set (Rear)",
+        "manufacturer": "Akebono",
+        "price": 53.95,
+        "quanity": 1
+      }
+    ]
+  },
+  "amountWithoutTax": 114.95,
+  "tax": 19.54,
+  "total": 134.49
+}

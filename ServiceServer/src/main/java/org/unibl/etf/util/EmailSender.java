@@ -25,23 +25,21 @@ public class EmailSender {
     /**
      * Šalje e-mail sa ili bez attachmenta
      * 
-     * @param to             primatelj
-     * @param subject        naslov maila
-     * @param body           sadržaj maila
+     * @param to             primalac
+     * @param subject        naslov mail-a
+     * @param body           sadržaj mail-a
      * @param attachmentPath putanja do fajla koji se šalje kao attachment (može biti null)
      */
     public static void sendEmail(String to, String subject, String body, String attachmentPath) {
-        final String username = "nutritivnaz@gmail.com";
-        final String password = "kocupkwyxmeemfvp";
+        final String username = Config.get("mail.username");
+        final String password = Config.get("mail.password");
 
-        // SMTP konfiguracija
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", Config.get("mail.smtp.auth"));
+        props.put("mail.smtp.starttls.enable", Config.get("mail.smtp.starttls.enable"));
+        props.put("mail.smtp.host", Config.get("mail.smtp.host"));
+        props.put("mail.smtp.port", Config.get("mail.smtp.port"));
 
-        // Kreiranje sesije
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
@@ -49,7 +47,6 @@ public class EmailSender {
         });
 
         try {
-            // MimeMessage je podklasa Message
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
@@ -72,7 +69,6 @@ public class EmailSender {
 
             message.setContent(multipart);
 
-            // Slanje maila
             Transport.send(message);
 
             System.out.println("Email sent!");
@@ -81,13 +77,5 @@ public class EmailSender {
         	System.err.println("SMTP probably is not allowed on your network.");
             e.printStackTrace();
         }
-    }
-
-    // Test metoda (primjer poziva)
-    public static void main(String[] args) {
-        sendEmail("grujo23@gmail.com",
-                  "Test Email",
-                  "Ovo je test email iz JavaMail sa attachmentom",
-                  "C:\\Users\\Administrator\\Desktop\\invoice\\Marko_Marković_2025-12-03_14-16-54.zip");
     }
 }

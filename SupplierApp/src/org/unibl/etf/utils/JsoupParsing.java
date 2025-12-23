@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,6 +16,8 @@ import org.jsoup.select.Elements;
 import org.unibl.etf.articles.Article;
 
 public class JsoupParsing {
+	private static final Logger LOGGER = Logger.getLogger(JsoupParsing.class.getName());
+	
 	ArrayList<String> urls;
 	
 	public JsoupParsing() {
@@ -28,36 +31,36 @@ public class JsoupParsing {
 	public ArrayList<Article> parseArticles() throws IOException  {
 		ArrayList<Article> articles = new ArrayList<Article>();
 		
-//		for(String url : urls) {
-//			Document doc = Jsoup.connect(url)
-//			        .userAgent("Mozilla/5.0")
-//			        .timeout(10000)	//10 sekudni
-//			        .get();
-//			
-//			Elements items = doc.select("li.product-cell.box-product");
-//			
-//	        if (items == null) {
-//	            System.out.println("No product elements found!");
-//	            return null;
-//	        }
-//
-//			for (Element item : items) {
-//				String code = item.selectFirst(".product-sku").text();
-//			    String name = item.selectFirst(".product > .product-name > a").text();
-//			    String price = item.selectFirst(".product-price-value").text().replace("$", "");
-//			    String image = item.selectFirst(".photo").attr("src");
-//
-//			    String[] nameSplit = name.strip().split(" ");
-//			    String manufacturer = nameSplit[0];
-//
-//			    articles.add(new Article(code, name, manufacturer, Double.parseDouble(price), image));
-//			}
-//		}
-//		System.out.println("Number of parsed articles: " + articles.size());
+		for(String url : urls) {
+			Document doc = Jsoup.connect(url)
+			        .userAgent("Mozilla/5.0")
+			        .timeout(10000)	//10 sekudni
+			        .get();
+			
+			Elements items = doc.select("li.product-cell.box-product");
+			
+	        if (items == null) {
+	            System.out.println("No product elements found!");
+	            return null;
+	        }
+
+			for (Element item : items) {
+				String code = item.selectFirst(".product-sku").text();
+			    String name = item.selectFirst(".product > .product-name > a").text();
+			    String price = item.selectFirst(".product-price-value").text().replace("$", "");
+			    String image = item.selectFirst(".photo").attr("src");
+
+			    String[] nameSplit = name.strip().split(" ");
+			    String manufacturer = nameSplit[0];
+
+			    articles.add(new Article(code, name, manufacturer, Double.parseDouble(price), image));
+			}
+		}
+		LOGGER.info("Number of parsed articles: " + articles.size());
 		
 		// next two lines are for incase web scraping be rejected or no internet connection
 		//writeArticlesToFile(articles, "C:\\Users\\Administrator\\Desktop\\articles.txt");
-		articles = readArticlesFromFile("C:\\Users\\Administrator\\Desktop\\articles.txt");
+//		articles = readArticlesFromFile("C:\\Users\\Administrator\\Desktop\\articles.txt");
 		
 		return articles;
 	}
@@ -90,7 +93,7 @@ public class JsoupParsing {
 
 	            String[] parts = line.split(";");
 
-	            if (parts.length != 5) continue; // zaštita od lošeg reda
+	            if (parts.length != 5) continue;
 
 	            String code = parts[0];
 	            String name = parts[1];

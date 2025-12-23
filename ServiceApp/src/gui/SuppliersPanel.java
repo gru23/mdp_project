@@ -87,7 +87,6 @@ public class SuppliersPanel extends JPanel {
             	System.out.println(newOrder);
             	if(newOrder.getArticles().size() > 0) {
 	            	ordersPanel.addOrder(newOrder);
-	            	System.out.println("Order poslan iz ServiceApp");
             	}
             }
         });

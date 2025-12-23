@@ -1,0 +1,21 @@
+{
+  "supplierName": "Supplier 129",
+  "order": {
+    "id": "58952114-0709-4c70-93e1-dc1977864d9b",
+    "supplier": "Supplier 129",
+    "date": "2025-12-23",
+    "status": "APPROVED",
+    "articles": [
+      {
+        "code": "3790441",
+        "name": "URO Parts 30744009 - Headlight Assembly (Left)",
+        "manufacturer": "URO",
+        "price": 158.95,
+        "quanity": 2
+      }
+    ]
+  },
+  "amountWithoutTax": 317.90,
+  "tax": 54.04,
+  "total": 371.94
+}

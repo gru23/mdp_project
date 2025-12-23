@@ -12,23 +12,12 @@ import java.util.UUID;
 
 public class XMLSerialization {
 	public static <T> void serializeXML(ArrayList<T> data, String path) throws FileNotFoundException {
-//		try(XMLEncoder encoder = new XMLEncoder(new FileOutputStream(new File(path)))) {
-//			encoder.writeObject(data);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 		try(XMLEncoder encoder = new XMLEncoder(new FileOutputStream(new File(path)))) {
 			encoder.writeObject(data);
 		}
 	}
 
 	public static <T> ArrayList<T> deserializeXML(String path) throws FileNotFoundException {
-//		try(XMLDecoder decoder = new XMLDecoder(new FileInputStream(path))) {
-//			return (ArrayList<T>) decoder.readObject();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return new ArrayList<>();
-//		}
 		try(XMLDecoder decoder = new XMLDecoder(new FileInputStream(path))) {
 			return (ArrayList<T>) decoder.readObject();
 		}
@@ -45,11 +34,8 @@ public class XMLSerialization {
 	 */
 	public static String getDataPath(String fileWithExtension) {
 	    String base = System.getProperty("catalina.base");
-	    return base + File.separator + "wtpwebapps" 
-	                + File.separator + "ServiceServer" 
-	                + File.separator + "WEB-INF"
-	                + File.separator + "data"
-	                + File.separator + fileWithExtension;	//ovo clients.xml preko propertie dohvatit
+	    return base + File.separator + Config.get("file.root.path")
+	                + File.separator + fileWithExtension;
 	}
 	
 	public static <T> ArrayList<T> readAll(String xmlPath) throws FileNotFoundException {

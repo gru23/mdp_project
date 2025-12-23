@@ -11,8 +11,6 @@ import org.unibl.etf.exceptions.InternalServerError;
 import org.unibl.etf.exceptions.NotFoundException;
 import org.unibl.etf.vehicle.VehicleDAO;
 
-
-
 public class ClientService {
 	private final ClientDAO clientDAO;
 	private final VehicleDAO vehicleDAO;
@@ -23,21 +21,6 @@ public class ClientService {
 		this.vehicleDAO = new VehicleDAO();
 		this.appointmentService = new AppointmentService();
 	}
-//	
-////	/C:\Users\Administrator\Desktop\MDP Project\ServiceServer\data
-//	//ServiceServer/data/clients.xml
-//	public ArrayList<ClientEntity> readAll() {
-////		return XMLSerialization.deserializeXML(System.getProperty("user.dir") + File.separator + 
-////				"data" + File.separator + "clients.xml");
-////		return XMLSerialization.deserializeXML("C:\\Users\\Administrator\\Desktop\\MDP Project\\ServiceServer\\data\\clients.xml");
-//		
-//		return XMLSerialization.deserializeXML(getDataPath());
-//	}
-//
-//	public void writeAll(ArrayList<ClientEntity> clients) {
-////		XMLSerialization.serializeXML(clients, "data/clients.xml");
-//		XMLSerialization.serializeXML(clients, getDataPath());
-//	}
 	
 	public ArrayList<Client> getAll() throws InternalServerError {
 		try {
@@ -110,27 +93,6 @@ public class ClientService {
 		catch(FileNotFoundException e) {
 			e.printStackTrace();
 			throw new InternalServerError();
-		}
-		
+		}		
 	}
-		
-	
-//	ova metoda je tacna a ne ova dole
-//	private String getDataPath() {
-//	    String base = System.getProperty("catalina.base");
-//	    return base + File.separator + "wtpwebapps" 
-//	                + File.separator + "ServiceServer" 
-//	                + File.separator + "WEB-INF"
-//	                + File.separator + "data"
-//	                + File.separator + "clients.xml";
-//	}
-	
-//	private String getDataPath() {
-//	    String base = System.getProperty("catalina.base");
-//	    return base + File.separator + "wtpwebapps"
-//	                + File.separator + "ServiceServer"
-//	                + File.separator + "data"
-//	                + File.separator + "clients.xml";
-//	}
-
 }

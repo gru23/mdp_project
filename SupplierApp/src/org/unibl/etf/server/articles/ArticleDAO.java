@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.unibl.etf.articles.Article;
+import org.unibl.etf.utils.Config;
 import org.unibl.etf.utils.JsoupParsing;
 
 
@@ -55,13 +56,13 @@ public class ArticleDAO {
 	
 	private void addUrls() {
 		urls = new ArrayList<String>();
-		urls.add("https://eeuroparts.com/brake-system/brake-pads/");
-		urls.add("https://eeuroparts.com/engine/oil-filters/");
-		urls.add("https://eeuroparts.com/ignition/spark-plugs/");
-		urls.add("https://eeuroparts.com/fuel-delivery/fuel-pumps/");
-		urls.add("https://eeuroparts.com/belts-and-cooling/thermostats/");
-		urls.add("https://eeuroparts.com/electrical-and-lighting/headlights/");
-		urls.add("https://eeuroparts.com/electrical-and-lighting/fuses/");
+		urls.add(Config.get("articles.brakes.url"));
+		urls.add(Config.get("articles.filters.url"));
+		urls.add(Config.get("articles.sparks.url"));
+		urls.add(Config.get("articles.pumps.url"));
+		urls.add(Config.get("articles.thermostats.url"));
+		urls.add(Config.get("articles.headlights.url"));
+		urls.add(Config.get("articles.fuses.url"));
 	}
 	
 	private ArrayList<String> getRandomUrls() {

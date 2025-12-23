@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.unibl.etf.appointment.enums.AppointmentStatus;
 import org.unibl.etf.exceptions.AppointmentConflictException;
 import org.unibl.etf.exceptions.NotFoundException;
+import org.unibl.etf.util.Config;
 import org.unibl.etf.util.XMLSerialization;
 
 public class AppointmentDAO {
@@ -93,10 +94,7 @@ public class AppointmentDAO {
  
 	private String getDataPath() {
 	    String base = System.getProperty("catalina.base");
-	    return base + File.separator + "wtpwebapps" 
-	                + File.separator + "ServiceServer" 
-	                + File.separator + "WEB-INF"
-	                + File.separator + "data"
-	                + File.separator + "appointments.xml";	//ovo clients.xml preko property dohvatit
+	    return base + File.separator + Config.get("file.root.path")
+	                + File.separator + Config.get("file.name.appointments");
 	}
 }

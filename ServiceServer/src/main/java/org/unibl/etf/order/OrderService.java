@@ -1,10 +1,14 @@
 package org.unibl.etf.order;
 
+import java.util.logging.Logger;
+
 import javax.servlet.ServletContext;
 
 import org.unibl.etf.order.enums.MessageType;
 
 public class OrderService {
+	private static final Logger LOGGER = Logger.getLogger(OrderService.class.getName());
+	
 	private OrderServer orderServer;
 	
 	public OrderService() {
@@ -28,6 +32,7 @@ public class OrderService {
         System.out.println("Order stig'o na ServiceServer, klasa OrderServie");
         OrderDAO.getInstance().addOrder(request);
         orderServer.sendOrder(request.getSupplier(), message);
+        LOGGER.info("Order forwarded");
         return request;
     }
 }
